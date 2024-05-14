@@ -1,8 +1,16 @@
 `timescale 1ns / 1ps
 
+/// Module: Immediate_Generator
+/// #Description: generate the immediate value based on the instruction
+/// #Inputs: inst
+/// #Outputs: imme
+/// #Note: 
+///   - immediate is signed exteneded from 12/20 bits to 32 bits
+///   - immediate from branch is left shifted by 1 bit
+
 module Immediate_Generator(
-input wire [31:0] inst,
-output reg [31:0] imme
+    input wire [31:0] inst,
+    output reg [31:0] imme
 );
 
 always @(*) 

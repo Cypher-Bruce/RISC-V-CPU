@@ -1,14 +1,21 @@
 `timescale 1ns / 1ps
 
-module ALU(
-input [31:0] read_data_1,
-input [31:0] read_data_2,
-input [31:0] imme,
-input [1:0] ALU_Operation,
-input ALU_src_flag,
-input [31:0] inst,
-output reg [31:0] ALU_result,
-output zero_flag
+/// Module: ALU
+/// Description: This module is the Arithmetic Logic Unit (ALU) of the RISC-V processor,
+///              it supports the following operations: AND, SUB, OR, ADD so far. (5/13)
+/// Inputs: ReadData1, ReadData2, imm32, ALUOp, ALUSrc, funct3, funct7(details seen below in the code)
+/// Outputs: ALUResult, zero
+
+module ALU (
+    input      [31:0] read_data_1,
+    input      [31:0] read_data_2,
+    input      [31:0] imme,
+    input      [1:0]  ALU_Operation,
+    input             ALU_src_flag,
+    input      [31:0] inst,
+    
+    output reg [31:0] ALU_result,
+    output            zero_flag
 );
 
 reg [3:0] ALU_control;
