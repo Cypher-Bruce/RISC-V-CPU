@@ -7,8 +7,8 @@
 ///              according to the address. The address is from PC.
 ///              Note: the PC increments by 1 each cycle, unless there is a branch instruction.
 ///              Note(cont.): Thus, addr from PC can directly be used in inst. mem instead of right shift.
-/// #Input       clk, rst, branch_flag, zero_flag, imme
-/// #Outputs     inst
+/// #Input       clk, rst, branch_flag, jal_flag, jalr_flag, zero_flag, imme
+/// #Outputs     inst, program_counter
 /// #Signals     
 ///         - address: 14-bit address for instruction memory
 ///         - branch_taken_flag: 1 if branch is taken
@@ -18,13 +18,16 @@ module Instruction_Fetch(
     input         clk,           /// adjusted clk, from cpu
     input         rst,           /// reset signal, from cpu
     input         branch_flag,   /// branch flag, from controller
+    input         jal_flag,      /// jump and link flag, from controller
+    input         jalr_flag,     /// jump and link register flag, from controller
     input         zero_flag,     /// 1 if sub result is 0, from ALU, 
-    input  [31:0] imme,          /// imm in branch inst, from decoder
+    input  [31:0] imme,          /// imm in branch inst, from inst memory
+    input  [31:0] read_data_1,   /// data from register
 
-    output [31:0] inst
+    output [31:0] inst,
+    output reg [31:0] program_counter
 );
 
-reg  [15:0] address;         // Program Counter
 reg         branch_taken_flag;
 wire [2:0]  funct3;  
 
@@ -39,7 +42,7 @@ wire [2:0]  funct3;
   
 Instruction_Memory_ip Instruction_Memory_Instance(
     .clka(clk), 
-    .addra(address[15:2]), 
+    .addra(program_counter[15:2]), 
     .douta(inst)
 ); 
 
@@ -52,32 +55,43 @@ assign funct3 = inst[14:12];
 
 always @*
 begin
-    case(funct3)
-        3'b000: // beq (ALU do sub)
-        begin
-            branch_taken_flag = zero_flag;
-        end
-        3'b001: // bne
-        begin
-            branch_taken_flag = !zero_flag;
-        end
-        3'b100: // blt (ALU do slt instead of sub)
-        begin
-            branch_taken_flag = !zero_flag;
-        end
-        3'b101: // bge
-        begin
-            branch_taken_flag = zero_flag;
-        end
-        3'b110: // bltu (ALU do sltu instead of sub)
-        begin
-            branch_taken_flag = !zero_flag;
-        end
-        3'b111: // bgeu
-        begin
-            branch_taken_flag = zero_flag;
-        end
-    endcase
+    if (jal_flag || jalr_flag)
+    begin
+        branch_taken_flag = 1;
+    end
+    else
+    begin
+        case(funct3)
+            3'b000: // beq (ALU do sub)
+            begin
+                branch_taken_flag = zero_flag;
+            end
+            3'b001: // bne
+            begin
+                branch_taken_flag = !zero_flag;
+            end
+            3'b100: // blt (ALU do slt instead of sub)
+            begin
+                branch_taken_flag = !zero_flag;
+            end
+            3'b101: // bge
+            begin
+                branch_taken_flag = zero_flag;
+            end
+            3'b110: // bltu (ALU do sltu instead of sub)
+            begin
+                branch_taken_flag = !zero_flag;
+            end
+            3'b111: // bgeu
+            begin
+                branch_taken_flag = zero_flag;
+            end
+            default: // no branch
+            begin
+                branch_taken_flag = 0;
+            end
+        endcase
+    end
 end
 
 ////////////////////////// PC //////////////////////////
@@ -92,15 +106,19 @@ always @(negedge clk)
 begin
     if (rst)
     begin
-        address <= `instruction_initial_address;
+        program_counter <= `instruction_initial_address;
+    end
+    else if (jalr_flag)
+    begin
+        program_counter <= read_data_1 + imme;
     end
     else if (branch_flag && branch_taken_flag)
     begin
-        address <= address + imme;
+        program_counter <= program_counter + imme;
     end
     else
     begin
-        address <= address + 4;
+        program_counter <= program_counter + 4;
     end
 end
 

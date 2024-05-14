@@ -1,7 +1,7 @@
 ///parameters.v
 
 // Instruction memory
-`define instruction_initial_address 16'h0000 
+`define instruction_initial_address 32'h00000000
 
 // Data memory
 `define IO_device_initial_address 16'hFFC0 
