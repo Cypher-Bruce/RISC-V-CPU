@@ -10,17 +10,15 @@ input [31:0] imme,
 output [31:0] inst
 );
 
-reg [13:0] address;
-wire [31:0] inst_mem_data;
+reg [15:0] address;
 reg branch_taken_flag;
 wire [2:0] funct3;
 Instruction_Memory_ip Instruction_Memory_Instance(
     .clka(clk), 
-    .addra(address), 
-    .douta(inst_mem_data)
+    .addra(address[15:2]), 
+    .douta(inst)
 ); 
 
-assign inst = inst_mem_data;
 assign funct3 = inst[14:12];
 
 always @*
@@ -61,11 +59,11 @@ begin
     end
     else if (branch_flag && branch_taken_flag)
     begin
-        address <= address + imme >> 2;
+        address <= address + imme;
     end
     else
     begin
-        address <= address + 1;
+        address <= address + 4;
     end
 end
 
