@@ -3,8 +3,8 @@
 /// Module: CPU_Top
 /// #Description: This module is the top module of the CPU. 
 ///              It connects all the other modules together.
-/// #Inputs: raw_clk, rst
-/// #Outputs: None
+/// #Inputs: raw_clk, rst, switch
+/// #Outputs: led
 /// #Signals
 ///             clk: adjusted clock signal, 
 ///             inst: 32-bit instruction from inst. memory
