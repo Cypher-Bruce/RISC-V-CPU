@@ -11,7 +11,7 @@
 
 ///             branch_flag: flag indicates branch inst
 ///             ALU_Operation: 2-bit ALU operation code
-///             ALU_src_flag: flag indicates ALU source
+///             ALU_src_flag: 0: read data from register, 1: read data from immediate
 ///             mem_read_flag: flag indicates memory read
 ///             mem_write_flag: flag indicates memory write
 ///             mem_to_reg_flag: flag indicates memory to register
@@ -28,7 +28,7 @@
 
 module CPU_Top(
     input         raw_clk,
-    input         rst,
+    input         rst,        // effect of rst: clear all the registers, set PC to 0, active high
     input  [23:0] switch,
     input  [4:0]  button,
     output [23:0] led
@@ -69,13 +69,13 @@ Controller Controller_Instance(
     .auipc_flag(auipc_flag)
 );
 
-////////////////////////// Instruction Decode //////////////////////////
+////////////////////////// Instruction Decode & WB //////////////////////////
 wire [31:0] reg_data_1;
 wire [31:0] reg_data_2;
 reg  [31:0] write_data;
 wire [31:0] imme;
 Decoder Decoder_Instance(
-    .write_data(write_data),
+    .write_data(write_data),            // WB
     .reg_write_flag(reg_write_flag),
     .inst(inst),
     .clk(clk),
@@ -120,7 +120,7 @@ Data_Memory Data_Memory_Instance(
     .clk(clk),
     .inst(inst),
     .address(ALU_result),
-    .write_data(reg_data_2),
+    .write_data(reg_data_2),        
     .switch(switch),
     .mem_read_flag(mem_read_flag),
     .mem_write_flag(mem_write_flag),

@@ -3,6 +3,7 @@
 ///              it supports the following operations: R, I, S, B so far. (5/13)
 /// Inputs: inst
 /// Outputs: control signals
+/// Note: For the table of control signals, please refer to https://media.cheggcdn.com/media/f99/f99de6a3-e2a2-4471-956d-da6ded821aa3/phpLUoecl.png
 
 module Controller(
     input       [31:0] inst,         // instruction  from IF

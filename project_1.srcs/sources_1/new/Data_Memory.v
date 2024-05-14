@@ -28,8 +28,12 @@ wire data_flag;                     // which divice to read/write, 0: block memo
 wire [31:0] raw_read_data;          // raw data read chosen from block memory or io device
 
 ///////////////////////// DATA MEMORY //////////////////////////
+/// Question: when the data is read or write? rising or falling edge?
+/// !!! Data is read or write at the FALLING edge of the clock signal
+/// No instruction requires read and write at the same time
+
 Data_Memory_ip Data_Memory_Instance(
-    .clka(clk),
+    .clka(~clk),
     .wea(data_flag ? 1'b0 : mem_write_flag),
     .addra(address[15:2]), 
     .dina(write_data), 

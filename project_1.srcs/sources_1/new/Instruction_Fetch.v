@@ -100,8 +100,9 @@ end
 /// Case2. branch_flag && branch_taken_flag: increment PC with imme
 /// Case3. default: increment PC by 4
 /// Note that actual address sent to memory ip core is address >> 2
+/// !!! PC is updated at the FALLING edge of the clock signal, for more details, refer to https://imgur.com/a/zZdYXqu
 
-always @(posedge clk)
+always @(negedge clk)
 begin
     if (rst)
     begin
