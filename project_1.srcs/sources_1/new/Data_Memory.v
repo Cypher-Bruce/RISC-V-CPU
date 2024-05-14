@@ -43,7 +43,7 @@ Data_Memory_ip Data_Memory_Instance(
 assign data_flag = ($unsigned(address[15:0]) >= $unsigned(`IO_device_initial_address)) ? 1 : 0;
 assign raw_read_data = data_flag ? io_device_read_data : block_memory_read_data;
 
-always @(posedge clk) begin
+always @(negedge clk) begin
     if (data_flag ? mem_write_flag : 1'b0) begin
         case (address[15:0])
             `led_initial_address: led <= write_data[23:0];

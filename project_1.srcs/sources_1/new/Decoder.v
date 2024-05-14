@@ -49,20 +49,20 @@ assign read_data_2    = register[read_reg_idx_2];
 ///////////////////////// INIT & WB //////////////////////////
 /// WB is activated when reg_write_flag is high and write_reg_idx is not 0
 /// !!! The register 0 is always 0, so it can't be written
-always @(posedge clk)
+always @(negedge clk)
 begin
     if (rst)
     begin
-        register[0] <= 32'b0;
-        register[1] <= 32'b0;
-        register[2] <= 32'b0;
-        register[3] <= 32'b0;
-        register[4] <= 32'b0;
-        register[5] <= 32'b0;
-        register[6] <= 32'b0;
-        register[7] <= 32'b0;
-        register[8] <= 32'b0;
-        register[9] <= 32'b0;
+        register[0]  <= 32'b0;
+        register[1]  <= 32'b0;
+        register[2]  <= 32'b0;
+        register[3]  <= 32'b0;
+        register[4]  <= 32'b0;
+        register[5]  <= 32'b0;
+        register[6]  <= 32'b0;
+        register[7]  <= 32'b0;
+        register[8]  <= 32'b0;
+        register[9]  <= 32'b0;
         register[10] <= 32'b0;
         register[11] <= 32'b0;
         register[12] <= 32'b0;
