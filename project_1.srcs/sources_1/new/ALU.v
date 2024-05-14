@@ -22,9 +22,9 @@ assign funct7 = inst[31:25];
 assign funct3 = inst[14:12];
 
 // ALU_Operation are defined as follows:
-// 10: R-type and arithmetic subset of I-type
 // 00: S-type and load subset of I-type
 // 01: B-type
+// 10: R-type and arithmetic subset of I-type
 
 always @* begin
     case(ALU_Operation)
@@ -34,7 +34,14 @@ always @* begin
         end
         2'b01:
         begin
-            ALU_control = 4'b0001; // sub
+            case(funct3)
+                if (funct3 == 3'b110 || funct3 == 3'b111) // bltu or bgeu
+                    ALU_control = 4'b1001; // sltu
+                else if (funct3 == 3'b100 || funct3 == 3'b101) // blt or bge
+                    ALU_control = 4'b1000; // slt
+                else // beq or bne
+                    ALU_control = 4'b0001; // sub
+            endcase
         end
         2'b10:
         begin
