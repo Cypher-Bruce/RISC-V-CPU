@@ -26,17 +26,17 @@ begin
             mem_to_reg_flag = 1'b0;
             reg_write_flag = 1'b1;
         end
-        7'b0010011: // I-type
+        7'b0010011: // I-type (arithmetic with immediate)
         begin
             branch_flag = 1'b0;
-            ALU_Operation = 2'b00;
+            ALU_Operation = 2'b10;
             ALU_src_flag = 1'b1;
             mem_read_flag = 1'b0;
             mem_write_flag = 1'b0;
             mem_to_reg_flag = 1'b0;
             reg_write_flag = 1'b1;
         end
-        7'b0000011: // I-type
+        7'b0000011: // I-type (load)
         begin
             branch_flag = 1'b0;
             ALU_Operation = 2'b00;
