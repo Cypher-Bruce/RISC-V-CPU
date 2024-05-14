@@ -34,7 +34,7 @@ always @* begin
         end
         2'b01:
         begin
-            ALU_control = 4'b0110; // sub
+            ALU_control = 4'b0001; // sub
         end
         2'b10:
         begin
