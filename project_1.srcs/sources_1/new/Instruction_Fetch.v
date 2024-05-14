@@ -19,7 +19,7 @@ module Instruction_Fetch(
     input         rst,           /// reset signal, from cpu
     input         branch_flag,   /// branch flag, from controller
     input         zero_flag,     /// 1 if sub result is 0, from ALU, 
-    input  [31:0] imme,          /// imm in branch inst, from inst memory
+    input  [31:0] imme,          /// imm in branch inst, from decoder
 
     output [31:0] inst
 );
@@ -86,8 +86,9 @@ end
 /// Case2. branch_flag && branch_taken_flag: increment PC with imme
 /// Case3. default: increment PC by 4
 /// Note that actual address sent to memory ip core is address >> 2
+/// !!! PC is updated at the FALLING edge of the clock signal, for more details, refer to https://imgur.com/a/zZdYXqu
 
-always @(posedge clk)
+always @(negedge clk)
 begin
     if (rst)
     begin

@@ -7,24 +7,24 @@
 /// Outputs: ALUResult, zero
 
 module ALU (
-    input      [31:0] read_data_1,
-    input      [31:0] read_data_2,
-    input      [31:0] imme,
-    input      [1:0]  ALU_Operation,
-    input             ALU_src_flag,
-    input      [31:0] inst,
+    input      [31:0] read_data_1,  // data from register file
+    input      [31:0] read_data_2,  // data from register file
+    input      [31:0] imme,         // immediate value, addi or beq, from ID
+    input      [1:0]  ALU_Operation,// ALU operation code, from controller
+    input             ALU_src_flag, // ALU source flag, from controller
+    input      [31:0] inst,         // 32-bit instruction, from ID
     
-    output reg [31:0] ALU_result,
-    output            zero_flag
+    output reg [31:0] ALU_result,   // result, to register file or data memory
+    output            zero_flag     // branch flag, to IF(PC), 1 if difference btw two operands is 0
 );
 
 reg [3:0] ALU_control;
-wire [31:0] operand_2;
+wire [31:0] operand_2;  // depends on ALU_src_flag: 0 => read_data_2, 1 => imme
 wire [2:0] funct3;
 wire [6:0] funct7;
 
 assign operand_2 = ALU_src_flag ? imme : read_data_2;
-assign zero_flag = ALU_result == 0;
+assign zero_flag = (ALU_result == 0);
 assign funct7 = inst[31:25];
 assign funct3 = inst[14:12];
 
@@ -83,7 +83,7 @@ always @* begin
                 end
                 3'b110:
                 begin
-                    ALU_control = 4'b0001; // or
+                    ALU_control = 4'b0011; // or
                 end
                 3'b111:
                 begin

@@ -3,12 +3,13 @@
 ///              it supports the following operations: R, I, S, B so far. (5/13)
 /// Inputs: inst
 /// Outputs: control signals
+/// Note: For the table of control signals, please refer to https://media.cheggcdn.com/media/f99/f99de6a3-e2a2-4471-956d-da6ded821aa3/phpLUoecl.png
 
 module Controller(
     input      [31:0] inst,         // instruction  from IF
     output reg branch_flag,         // Branch signal, if inst. is beq, bne, etc.
     output reg [1:0] ALU_Operation, // ALU operation signal, among AND, SUB, OR, ADD
-    output reg ALU_src_flag,        // imm32(lw, addi...) or ReadData2(add, sub...)
+    output reg ALU_src_flag,        // 0: read data from register, 1: read data from immediate
     output reg mem_read_flag,       // read from memory enable(lw)
     output reg mem_write_flag,      // write to memory enable(sw)
     output reg mem_to_reg_flag,     // memory to register enable(lw)

@@ -22,8 +22,14 @@ module Data_Memory (
 ); 
 
 ///////////////////////// DATA MEMORY //////////////////////////
+/// Question: when the data is read or write? rising or falling edge?
+/// !!! Data is read or write at the FALLING edge of the clock signal
+/// No instruction requires read and write at the same time
+wire clk_neg;
+assign clk_neg = ~clk;
+
 Data_Memory_ip Data_Memory_Instance(
-    .clka(clk),
+    .clka(clk_neg),
     .wea(mem_write_flag), 
     .addra(address[15:2]), 
     .dina(write_data), 
