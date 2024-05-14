@@ -7,7 +7,7 @@
 ///              according to the address. The address is from PC.
 ///              Note: the PC increments by 1 each cycle, unless there is a branch instruction.
 ///              Note(cont.): Thus, addr from PC can directly be used in inst. mem instead of right shift.
-/// #Input       clk, rst, branch_flag, jump_flag, zero_flag, imme
+/// #Input       clk, rst, branch_flag, jal_flag, jalr_flag, zero_flag, imme
 /// #Outputs     inst, program_counter
 /// #Signals     
 ///         - address: 14-bit address for instruction memory
@@ -18,9 +18,11 @@ module Instruction_Fetch(
     input         clk,           /// adjusted clk, from cpu
     input         rst,           /// reset signal, from cpu
     input         branch_flag,   /// branch flag, from controller
-    input         jump_flag,     /// jump flag, from controller
+    input         jal_flag,      /// jump and link flag, from controller
+    input         jalr_flag,     /// jump and link register flag, from controller
     input         zero_flag,     /// 1 if sub result is 0, from ALU, 
     input  [31:0] imme,          /// imm in branch inst, from inst memory
+    input  [31:0] read_data_1,   /// data from register
 
     output [31:0] inst,
     output reg [31:0] program_counter
@@ -53,7 +55,7 @@ assign funct3 = inst[14:12];
 
 always @*
 begin
-    if (jump_flag)
+    if (jal_flag || jalr_flag)
     begin
         branch_taken_flag = 1;
     end
@@ -84,6 +86,10 @@ begin
             begin
                 branch_taken_flag = zero_flag;
             end
+            default: // no branch
+            begin
+                branch_taken_flag = 0;
+            end
         endcase
     end
 end
@@ -100,6 +106,10 @@ begin
     if (rst)
     begin
         program_counter <= `instruction_initial_address;
+    end
+    else if (jalr_flag)
+    begin
+        program_counter <= read_data_1 + imme;
     end
     else if (branch_flag && branch_taken_flag)
     begin

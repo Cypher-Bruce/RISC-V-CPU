@@ -30,6 +30,7 @@ module CPU_Top(
     input         raw_clk,
     input         rst,
     input  [23:0] switch,
+    input  [4:0]  button,
     output [23:0] led
 );
 
@@ -49,7 +50,10 @@ wire            mem_read_flag;
 wire            mem_write_flag;
 wire            mem_to_reg_flag;
 wire            reg_write_flag;
-wire            jump_flag;
+wire            jal_flag;
+wire            jalr_flag;
+wire            lui_flag;
+wire            auipc_flag;
 Controller Controller_Instance(
     .inst(inst),
     .branch_flag(branch_flag),
@@ -59,28 +63,17 @@ Controller Controller_Instance(
     .mem_write_flag(mem_write_flag),
     .mem_to_reg_flag(mem_to_reg_flag),
     .reg_write_flag(reg_write_flag),
-    .jump_flag(jump_flag)
-);
-
-////////////////////////// Instrustion Fetch //////////////////////////
-wire        zero_flag;
-wire [31:0] imme;
-wire [31:0] program_counter;
-Instruction_Fetch Instruction_Fetch_Instance(
-    .clk(clk),
-    .rst(rst),
-    .branch_flag(branch_flag),
-    .jump_flag(jump_flag),
-    .zero_flag(zero_flag),
-    .imme(imme),
-    .inst(inst),
-    .program_counter(program_counter)
+    .jal_flag(jal_flag),
+    .jalr_flag(jalr_flag),
+    .lui_flag(lui_flag),
+    .auipc_flag(auipc_flag)
 );
 
 ////////////////////////// Instruction Decode //////////////////////////
 wire [31:0] reg_data_1;
 wire [31:0] reg_data_2;
-wire [31:0] write_data;
+reg  [31:0] write_data;
+wire [31:0] imme;
 Decoder Decoder_Instance(
     .write_data(write_data),
     .reg_write_flag(reg_write_flag),
@@ -90,6 +83,22 @@ Decoder Decoder_Instance(
     .read_data_1(reg_data_1),
     .read_data_2(reg_data_2),
     .imme(imme)
+);
+
+////////////////////////// Instrustion Fetch //////////////////////////
+wire        zero_flag;
+wire [31:0] program_counter;
+Instruction_Fetch Instruction_Fetch_Instance(
+    .clk(clk),
+    .rst(rst),
+    .branch_flag(branch_flag),
+    .jal_flag(jal_flag),
+    .jalr_flag(jalr_flag),
+    .zero_flag(zero_flag),
+    .imme(imme),
+    .read_data_1(reg_data_1),
+    .inst(inst),
+    .program_counter(program_counter)
 );
 
 ////////////////////////// Execution //////////////////////////
@@ -120,6 +129,28 @@ Data_Memory Data_Memory_Instance(
 );
 
 ////////////////////////// WB //////////////////////////
-assign write_data = jump_flag ? program_counter + 4 : (mem_to_reg_flag ? data_memory_data : ALU_result);
+always @*
+begin
+    if (jal_flag || jalr_flag)
+    begin
+        write_data = program_counter + 4;
+    end 
+    else if (lui_flag)
+    begin
+        write_data = imme;
+    end
+    else if (auipc_flag)
+    begin
+        write_data = program_counter + imme;
+    end
+    else if (mem_to_reg_flag)
+    begin
+        write_data = data_memory_data;
+    end
+    else
+    begin
+        write_data = ALU_result;
+    end
+end
 
 endmodule
