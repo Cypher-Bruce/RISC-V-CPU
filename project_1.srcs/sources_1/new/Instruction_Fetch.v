@@ -25,7 +25,7 @@ begin
     end
     else if (branch_flag && zero_flag)
     begin
-        address <= address + imme;
+        address <= address + imme >> 2;
     end
     else
     begin
