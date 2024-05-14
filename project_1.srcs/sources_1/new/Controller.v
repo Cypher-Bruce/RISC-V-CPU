@@ -80,7 +80,7 @@ always @* begin
             begin
                 branch_flag     = 1'b0;
                 ALU_Operation   = 2'b00;
-                ALU_src_flag    = 1'b0;
+                ALU_src_flag    = 1'b1;
                 mem_read_flag   = 1'b0;
                 mem_write_flag  = 1'b0;
                 mem_to_reg_flag = 1'b0;

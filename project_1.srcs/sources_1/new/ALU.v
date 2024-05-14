@@ -29,7 +29,7 @@ assign funct7 = inst[31:25];
 assign funct3 = inst[14:12];
 
 // ALU_Operation are defined as follows:
-// 00: S-type and load subset of I-type
+// 00: S-type, load subset of I-type and J-type
 // 01: B-type
 // 10: R-type and arithmetic subset of I-type
 // 11: undefined
