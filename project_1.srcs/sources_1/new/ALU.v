@@ -7,32 +7,31 @@
 /// Outputs: ALUResult, zero
 
 module ALU (
-    input      [31:0] read_data_1,
-    input      [31:0] read_data_2,
-    input      [31:0] imme,
-    input      [1:0]  ALU_Operation,
-    input             ALU_src_flag,
-    input      [31:0] inst,
+    input      [31:0] read_data_1,  // data from register file
+    input      [31:0] read_data_2,  // data from register file
+    input      [31:0] imme,         // immediate value, addi or beq, from ID
+    input      [1:0]  ALU_Operation,// ALU operation code, from controller
+    input             ALU_src_flag, // ALU source flag, from controller
+    input      [31:0] inst,         // 32-bit instruction, from ID
     
-    output reg [31:0] ALU_result,
-    output            zero_flag
+    output reg [31:0] ALU_result,   // result, to register file or data memory
+    output            zero_flag     // branch flag, to IF(PC), 1 if difference btw two operands is 0
 );
 
 reg [3:0] ALU_control;
-wire [31:0] operand_2;
+wire [31:0] operand_2;  // depends on ALU_src_flag: 0 => read_data_2, 1 => imme
 wire [2:0] funct3;
 wire [6:0] funct7;
 
 assign operand_2 = ALU_src_flag ? imme : read_data_2;
-assign zero_flag = ALU_result == 0;
+assign zero_flag = (ALU_result == 0);
 assign funct7 = inst[31:25];
 assign funct3 = inst[14:12];
 
 // ALU_Operation are defined as follows:
-// 00: S-type, load subset of I-type and J-type
+// 00: S-type and load subset of I-type
 // 01: B-type
 // 10: R-type and arithmetic subset of I-type
-// 11: undefined
 
 always @* begin
     case(ALU_Operation)
@@ -84,7 +83,7 @@ always @* begin
                 end
                 3'b110:
                 begin
-                    ALU_control = 4'b0001; // or
+                    ALU_control = 4'b0011; // or
                 end
                 3'b111:
                 begin
@@ -96,7 +95,7 @@ always @* begin
                 end
             endcase
         end
-        2'b11:
+        default:
         begin
             ALU_control = 4'b1111; // undefine
         end
@@ -114,7 +113,7 @@ end
 // 0111: sra
 // 1000: slt
 // 1001: sltu
-// else: undefine
+// Note: for signed and unsigned comparison, refer to https://circuitcove.com/design-examples-comparators/
 
 always @* begin
     case(ALU_control)
@@ -152,11 +151,11 @@ always @* begin
         end
         4'b1000:
         begin
-            ALU_result = (read_data_1 < operand_2) ? 32'b1 : 32'b0;
+            ALU_result = ($signed(read_data_1) < $signed(operand_2)) ? 32'b1 : 32'b0;
         end
         4'b1001:
         begin
-            ALU_result = ($unsigned(read_data_1) < $unsigned(operand_2)) ? 32'b1 : 32'b0;
+            ALU_result = (read_data_1 < operand_2) ? 32'b1 : 32'b0;
         end
         default:
         begin
