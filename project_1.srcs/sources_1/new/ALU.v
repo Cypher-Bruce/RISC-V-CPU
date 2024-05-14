@@ -34,14 +34,12 @@ always @* begin
         end
         2'b01:
         begin
-            case(funct3)
-                if (funct3 == 3'b110 || funct3 == 3'b111) // bltu or bgeu
-                    ALU_control = 4'b1001; // sltu
-                else if (funct3 == 3'b100 || funct3 == 3'b101) // blt or bge
-                    ALU_control = 4'b1000; // slt
-                else // beq or bne
-                    ALU_control = 4'b0001; // sub
-            endcase
+            if (funct3 == 3'b110 || funct3 == 3'b111) // bltu or bgeu
+                ALU_control = 4'b1001; // sltu
+            else if (funct3 == 3'b100 || funct3 == 3'b101) // blt or bge
+                ALU_control = 4'b1000; // slt
+            else // beq or bne
+                ALU_control = 4'b0001; // sub
         end
         2'b10:
         begin
