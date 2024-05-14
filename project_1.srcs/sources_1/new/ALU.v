@@ -29,10 +29,9 @@ assign funct7 = inst[31:25];
 assign funct3 = inst[14:12];
 
 // ALU_Operation are defined as follows:
-// 00: S-type, load subset of I-type and J-type
+// 00: S-type and load subset of I-type
 // 01: B-type
 // 10: R-type and arithmetic subset of I-type
-// 11: undefined
 
 always @* begin
     case(ALU_Operation)
@@ -96,7 +95,7 @@ always @* begin
                 end
             endcase
         end
-        2'b11:
+        default:
         begin
             ALU_control = 4'b1111; // undefine
         end
@@ -114,7 +113,7 @@ end
 // 0111: sra
 // 1000: slt
 // 1001: sltu
-// else: undefine
+// Note: for signed and unsigned comparison, refer to https://circuitcove.com/design-examples-comparators/
 
 always @* begin
     case(ALU_control)
@@ -152,11 +151,11 @@ always @* begin
         end
         4'b1000:
         begin
-            ALU_result = (read_data_1 < operand_2) ? 32'b1 : 32'b0;
+            ALU_result = ($signed(read_data_1) < $signed(operand_2)) ? 32'b1 : 32'b0;
         end
         4'b1001:
         begin
-            ALU_result = ($unsigned(read_data_1) < $unsigned(operand_2)) ? 32'b1 : 32'b0;
+            ALU_result = (read_data_1 < operand_2) ? 32'b1 : 32'b0;
         end
         default:
         begin
