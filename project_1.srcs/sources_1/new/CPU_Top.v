@@ -27,8 +27,10 @@
 ///             data_memory_data: 32-bit data from data memory
 
 module CPU_Top(
-    input raw_clk,
-    input rst
+    input         raw_clk,
+    input         rst,
+    input  [23:0] switch,
+    output [23:0] led
 );
 
 ////////////////////////// Clock divisions //////////////////////////
@@ -102,11 +104,14 @@ ALU ALU_Instance(
 wire [31:0] data_memory_data;
 Data_Memory Data_Memory_Instance(
     .clk(clk),
+    .inst(inst),
     .address(ALU_result),
     .write_data(reg_data_2),
+    .switch(switch),
     .mem_read_flag(mem_read_flag),
     .mem_write_flag(mem_write_flag),
-    .read_data(data_memory_data)
+    .read_data(data_memory_data),
+    .led(led)
 );
 
 ////////////////////////// WB //////////////////////////

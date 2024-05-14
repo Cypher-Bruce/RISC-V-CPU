@@ -24,7 +24,7 @@ module Instruction_Fetch(
     output [31:0] inst
 );
 
-reg  [13:0] address;         // Program Counter
+reg  [15:0] address;         // Program Counter
 reg         branch_taken_flag;
 wire [2:0]  funct3;  
 
@@ -39,7 +39,7 @@ wire [2:0]  funct3;
   
 Instruction_Memory_ip Instruction_Memory_Instance(
     .clka(clk), 
-    .addra(address), 
+    .addra(address[15:2]), 
     .douta(inst)
 ); 
 
@@ -95,11 +95,11 @@ begin
     end
     else if (branch_flag && branch_taken_flag)
     begin
-        address <= address + (imme >> 2);
+        address <= address + imme;
     end
     else
     begin
-        address <= address + 1;
+        address <= address + 4;
     end
 end
 
