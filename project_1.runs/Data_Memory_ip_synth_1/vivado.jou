@@ -1,0 +1,12 @@
+#-----------------------------------------------------------
+# Vivado v2017.4 (64-bit)
+# SW Build 2086221 on Fri Dec 15 20:55:39 MST 2017
+# IP Build 2085800 on Fri Dec 15 22:25:07 MST 2017
+# Start of session at: Tue May 14 08:36:51 2024
+# Process ID: 21828
+# Current directory: C:/Users/Cyphe/Documents/SUSTech Assignment/Term 4/Computer Organization/Project/project_1.runs/Data_Memory_ip_synth_1
+# Command line: vivado.exe -log Data_Memory_ip.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source Data_Memory_ip.tcl
+# Log file: C:/Users/Cyphe/Documents/SUSTech Assignment/Term 4/Computer Organization/Project/project_1.runs/Data_Memory_ip_synth_1/Data_Memory_ip.vds
+# Journal file: C:/Users/Cyphe/Documents/SUSTech Assignment/Term 4/Computer Organization/Project/project_1.runs/Data_Memory_ip_synth_1\vivado.jou
+#-----------------------------------------------------------
+source Data_Memory_ip.tcl -notrace

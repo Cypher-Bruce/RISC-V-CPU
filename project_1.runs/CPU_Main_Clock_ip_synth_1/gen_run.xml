@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenRun Id="CPU_Main_Clock_ip_synth_1" LaunchPart="xc7a100tfgg484-1" LaunchTime="1715647696">
+  <File Type="PA-TCL" Name="CPU_Main_Clock_ip.tcl"/>
+  <File Type="RDS-PROPCONSTRS" Name="CPU_Main_Clock_ip_drc_synth.rpt"/>
+  <File Type="REPORTS-TCL" Name="CPU_Main_Clock_ip_reports.tcl"/>
+  <File Type="RDS-RDS" Name="CPU_Main_Clock_ip.vds"/>
+  <File Type="RDS-UTIL" Name="CPU_Main_Clock_ip_utilization_synth.rpt"/>
+  <File Type="RDS-UTIL-PB" Name="CPU_Main_Clock_ip_utilization_synth.pb"/>
+  <File Type="RDS-DCP" Name="CPU_Main_Clock_ip.dcp"/>
+  <File Type="VDS-TIMINGSUMMARY" Name="CPU_Main_Clock_ip_timing_summary_synth.rpt"/>
+  <File Type="VDS-TIMING-PB" Name="CPU_Main_Clock_ip_timing_summary_synth.pb"/>
+  <FileSet Name="sources" Type="BlockSrcs" RelSrcDir="$PSRCDIR/CPU_Main_Clock_ip">
+    <File Path="$PSRCDIR/sources_1/ip/CPU_Main_Clock_ip/CPU_Main_Clock_ip.xci">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <Config>
+      <Option Name="TopModule" Val="CPU_Main_Clock_ip"/>
+      <Option Name="UseBlackboxStub" Val="1"/>
+    </Config>
+  </FileSet>
+  <FileSet Name="constrs_in" Type="BlockSrcs" RelSrcDir="$PSRCDIR/CPU_Main_Clock_ip">
+    <File Path="$PSRCDIR/sources_1/ip/CPU_Main_Clock_ip/CPU_Main_Clock_ip.xci">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <Config>
+      <Option Name="TopModule" Val="CPU_Main_Clock_ip"/>
+      <Option Name="UseBlackboxStub" Val="1"/>
+    </Config>
+  </FileSet>
+  <Strategy Version="1" Minor="2">
+    <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2017">
+      <Desc>Vivado Synthesis Defaults</Desc>
+    </StratHandle>
+    <Step Id="synth_design"/>
+  </Strategy>
+</GenRun>
