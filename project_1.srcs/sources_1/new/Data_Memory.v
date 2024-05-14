@@ -17,7 +17,7 @@ module Data_Memory (
     input               mem_write_flag,  // write flag, from controller
     input       [23:0]  switch,
 
-    output      [31:0]  read_data        // data read from memory, to register file(load inst.)
+    output      [31:0]  read_data,       // data read from memory, to register file(load inst.)
     output reg  [23:0]  led
 ); 
 

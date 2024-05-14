@@ -6,4 +6,4 @@
 // Data memory
 `define IO_device_initial_address 16'hFFC0 
 `define led_initial_address 16'hFFC0
-`define switch_initial_address 16'hFFD0
+`define switch_initial_address 16'hFFC4

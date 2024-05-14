@@ -30,10 +30,10 @@ wire [2:0]  funct3;
 
 ////////////////////////// Instruction Memory //////////////////////////
 /// The inst memory is so far a ROM ip core
-/// Config: width=32bits, depth=16384(2^14)
+/// Config: width=32bits, depth=16384(2^14), capacity=64KB
 /// Paramter: 
-///         - clka: cpu clock signal, 100MHz
-///         - addra: Word addressable. 14-bit from PC, = (actual address) >> 2
+///         - clka: cpu clock signal, 23MHz
+///         - addra: Word addressable. 14-bit from PC, = PC >> 2
 ///         - douta: 32-bit instruction
 /// TODO: update inst memory to RAM for UART
   
@@ -45,7 +45,7 @@ Instruction_Memory_ip Instruction_Memory_Instance(
 
 ////////////////////////// BRANCH CONTROL //////////////////////////
 /// According to the result and the branch instruction,
-/// PC is determined to to goal address or not
+/// PC is determined to go to goal address or not
 /// It corresponds to the MUX in the CPU blueprint, but with some modifications added
   
 assign funct3 = inst[14:12];
@@ -83,9 +83,9 @@ end
 ////////////////////////// PC //////////////////////////
 /// Three cases for PC
 /// Case1. rst: set PC to initial address
-/// Case2. branch_flag && zero_flag: increment PC with imme
-/// Case3. default: increment PC by 1
-/// Note that PC = (actual address) >> 2
+/// Case2. branch_flag && branch_taken_flag: increment PC with imme
+/// Case3. default: increment PC by 4
+/// Note that actual address sent to memory ip core is address >> 2
 
 always @(posedge clk)
 begin
