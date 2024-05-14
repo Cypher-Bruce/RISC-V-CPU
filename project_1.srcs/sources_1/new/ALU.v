@@ -32,6 +32,7 @@ assign funct3 = inst[14:12];
 // 00: S-type and load subset of I-type
 // 01: B-type
 // 10: R-type and arithmetic subset of I-type
+// 11: undefined
 
 always @* begin
     case(ALU_Operation)
@@ -95,7 +96,7 @@ always @* begin
                 end
             endcase
         end
-        default:
+        2'b11:
         begin
             ALU_control = 4'b1111; // undefine
         end
@@ -113,6 +114,7 @@ end
 // 0111: sra
 // 1000: slt
 // 1001: sltu
+// else: undefine
 
 always @* begin
     case(ALU_control)

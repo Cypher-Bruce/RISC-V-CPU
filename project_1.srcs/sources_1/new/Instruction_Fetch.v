@@ -18,10 +18,12 @@ module Instruction_Fetch(
     input         clk,           /// adjusted clk, from cpu
     input         rst,           /// reset signal, from cpu
     input         branch_flag,   /// branch flag, from controller
+    input         jump_flag,     /// jump flag, from controller
     input         zero_flag,     /// 1 if sub result is 0, from ALU, 
     input  [31:0] imme,          /// imm in branch inst, from inst memory
 
-    output [31:0] inst
+    output [31:0] inst,
+    output [31:0] program_counter
 );
 
 reg  [15:0] address;         // Program Counter
@@ -52,32 +54,39 @@ assign funct3 = inst[14:12];
 
 always @*
 begin
-    case(funct3)
-        3'b000: // beq (ALU do sub)
-        begin
-            branch_taken_flag = zero_flag;
-        end
-        3'b001: // bne
-        begin
-            branch_taken_flag = !zero_flag;
-        end
-        3'b100: // blt (ALU do slt instead of sub)
-        begin
-            branch_taken_flag = !zero_flag;
-        end
-        3'b101: // bge
-        begin
-            branch_taken_flag = zero_flag;
-        end
-        3'b110: // bltu (ALU do sltu instead of sub)
-        begin
-            branch_taken_flag = !zero_flag;
-        end
-        3'b111: // bgeu
-        begin
-            branch_taken_flag = zero_flag;
-        end
-    endcase
+    if (jump_flag)
+    begin
+        branch_taken_flag = 1;
+    end
+    else
+    begin
+        case(funct3)
+            3'b000: // beq (ALU do sub)
+            begin
+                branch_taken_flag = zero_flag;
+            end
+            3'b001: // bne
+            begin
+                branch_taken_flag = !zero_flag;
+            end
+            3'b100: // blt (ALU do slt instead of sub)
+            begin
+                branch_taken_flag = !zero_flag;
+            end
+            3'b101: // bge
+            begin
+                branch_taken_flag = zero_flag;
+            end
+            3'b110: // bltu (ALU do sltu instead of sub)
+            begin
+                branch_taken_flag = !zero_flag;
+            end
+            3'b111: // bgeu
+            begin
+                branch_taken_flag = zero_flag;
+            end
+        endcase
+    end
 end
 
 ////////////////////////// PC //////////////////////////
@@ -102,5 +111,7 @@ begin
         address <= address + 4;
     end
 end
+
+assign program_counter = {{16{address[15]}}, address[15:0]}; // sign extension
 
 endmodule

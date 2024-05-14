@@ -12,7 +12,8 @@ module Controller(
     output reg mem_read_flag,       // read from memory enable(lw)
     output reg mem_write_flag,      // write to memory enable(sw)
     output reg mem_to_reg_flag,     // memory to register enable(lw)
-    output reg reg_write_flag       // write to register enable(sw, add, sub, and, or...)
+    output reg reg_write_flag,      // write to register enable(sw, add, sub, and, or...)
+    output reg jump_flag            // jump signal, if inst. is jal, jalr, etc.
 );
 
 wire [6:0] opcode;
@@ -29,6 +30,7 @@ always @* begin
                 mem_write_flag  = 1'b0;
                 mem_to_reg_flag = 1'b0;
                 reg_write_flag  = 1'b1;
+                jump_flag       = 1'b0;
             end
         7'b0010011: // I-type (arithmetic with immediate)
             begin
@@ -39,6 +41,7 @@ always @* begin
                 mem_write_flag  = 1'b0;
                 mem_to_reg_flag = 1'b0;
                 reg_write_flag  = 1'b1;
+                jump_flag       = 1'b0;
             end
         7'b0000011: // I-type (load)
             begin
@@ -49,6 +52,7 @@ always @* begin
                 mem_write_flag  = 1'b0;
                 mem_to_reg_flag = 1'b1;
                 reg_write_flag  = 1'b1;
+                jump_flag       = 1'b0;
             end
         7'b0100011: // S-type
             begin
@@ -59,6 +63,7 @@ always @* begin
                 mem_write_flag  = 1'b1;
                 mem_to_reg_flag = 1'b0;
                 reg_write_flag  = 1'b0;
+                jump_flag       = 1'b0;
             end
         7'b1100011: // B-type
             begin
@@ -69,6 +74,18 @@ always @* begin
                 mem_write_flag  = 1'b0;
                 mem_to_reg_flag = 1'b0;
                 reg_write_flag  = 1'b0;
+                jump_flag       = 1'b0;
+            end
+        7'b1101111: // J-type
+            begin
+                branch_flag     = 1'b0;
+                ALU_Operation   = 2'b00;
+                ALU_src_flag    = 1'b0;
+                mem_read_flag   = 1'b0;
+                mem_write_flag  = 1'b0;
+                mem_to_reg_flag = 1'b0;
+                reg_write_flag  = 1'b1;
+                jump_flag       = 1'b1;
             end
         default:
             begin
@@ -79,6 +96,7 @@ always @* begin
                 mem_write_flag  = 1'b0;
                 mem_to_reg_flag = 1'b0;
                 reg_write_flag  = 1'b0;
+                jump_flag       = 1'b0;
             end
     endcase
 end

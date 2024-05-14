@@ -21,6 +21,7 @@ module Decoder (
     input  [31:0] write_data,       // data to be written in register, from ALU or Data_Memory
     input         reg_write_flag,   // write flag, from controller
     input  [31:0] inst,             // instruction, from Instruction_Memory(IF)
+    input  [31:0] program_counter,  // program counter, from IF
 
     output [31:0] read_data_1,      // data read from register, to ALU
     output [31:0] read_data_2,      // data read from register, to ALU
