@@ -12,7 +12,7 @@ output [31:0] inst
 
 reg [13:0] address;
 wire [31:0] inst_mem_data;
-wire branch_taken_flag;
+reg branch_taken_flag;
 wire [2:0] funct3;
 Instruction_Memory_ip Instruction_Memory_Instance(
     .clka(clk), 
