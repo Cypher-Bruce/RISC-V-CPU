@@ -22,10 +22,10 @@ module Data_Memory (
     output reg  [23:0]  led              // led output, to board
 ); 
 
-wire [31:0] block_memory_read_data;
-reg [31:0] io_device_read_data;
-wire [31:0] raw_read_data;
-wire data_flag; // which divice to read/write, 0: block memory, 1: io device
+wire [31:0] block_memory_read_data; // data read from block memory
+reg  [31:0] io_device_read_data;    // data read from io device
+wire data_flag;                     // which divice to read/write, 0: block memory, 1: io device
+wire [31:0] raw_read_data;          // raw data read chosen from block memory or io device
 
 ///////////////////////// DATA MEMORY //////////////////////////
 Data_Memory_ip Data_Memory_Instance(
@@ -37,6 +37,7 @@ Data_Memory_ip Data_Memory_Instance(
 );
 
 assign data_flag = (address[15:0] >= `IO_device_initial_address) ? 1 : 0;
+assign raw_read_data = data_flag ? io_device_read_data : block_memory_read_data;
 
 always @(posedge clk) begin
     if (data_flag ? mem_write_flag : 1'b0) begin
@@ -54,8 +55,6 @@ always @* begin
     endcase
 end
 
-assign raw_read_data = data_flag ? io_device_read_data : block_memory_read_data;
-
 // handle the different data size (byte/half/word)
 
 wire funct3 = inst[14:12];
@@ -64,10 +63,10 @@ always @* begin
         3'b000: // load byte
         begin
             case (address[1:0])
-                2'b00: read_data = {{24{raw_read_data[7]}}, raw_read_data[7]};
-                2'b01: read_data = {{24{raw_read_data[15]}}, raw_read_data[15]};
-                2'b10: read_data = {{24{raw_read_data[23]}}, raw_read_data[23]};
-                2'b11: read_data = {{24{raw_read_data[31]}}, raw_read_data[31]};
+                2'b00: read_data = {{24{raw_read_data[7]}}, raw_read_data[7:0]};
+                2'b01: read_data = {{24{raw_read_data[15]}}, raw_read_data[15:8]};
+                2'b10: read_data = {{24{raw_read_data[23]}}, raw_read_data[23:16]};
+                2'b11: read_data = {{24{raw_read_data[31]}}, raw_read_data[31:24]};
             endcase
         end
         3'b001: // load half
@@ -84,10 +83,10 @@ always @* begin
         3'b100: // load byte unsigned
         begin
             case (address[1:0])
-                2'b00: read_data = {24'h000000, raw_read_data[7]};
-                2'b01: read_data = {24'h000000, raw_read_data[15]};
-                2'b10: read_data = {24'h000000, raw_read_data[23]};
-                2'b11: read_data = {24'h000000, raw_read_data[31]};
+                2'b00: read_data = {24'h000000, raw_read_data[7:0]};
+                2'b01: read_data = {24'h000000, raw_read_data[15:8]};
+                2'b10: read_data = {24'h000000, raw_read_data[23:16]};
+                2'b11: read_data = {24'h000000, raw_read_data[31:24]};
             endcase
         end
         3'b101: // load half unsigned
