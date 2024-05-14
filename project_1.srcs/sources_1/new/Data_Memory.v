@@ -36,7 +36,7 @@ Data_Memory_ip Data_Memory_Instance(
     .douta(block_memory_read_data)
 );
 
-assign data_flag = (address[15:0] >= `IO_device_initial_address) ? 1 : 0;
+assign data_flag = ($unsigned(address[15:0]) >= $unsigned(`IO_device_initial_address)) ? 1 : 0;
 assign raw_read_data = data_flag ? io_device_read_data : block_memory_read_data;
 
 always @(posedge clk) begin
