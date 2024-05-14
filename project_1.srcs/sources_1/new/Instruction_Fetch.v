@@ -112,6 +112,6 @@ begin
     end
 end
 
-assign program_counter = {{16{address[15]}}, address[15:0]}; // sign extension
+assign program_counter = {16'h0000, address[15:0]}; // sign extension
 
 endmodule
