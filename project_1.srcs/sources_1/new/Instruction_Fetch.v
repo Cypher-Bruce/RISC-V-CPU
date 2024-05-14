@@ -7,8 +7,8 @@
 ///              according to the address. The address is from PC.
 ///              Note: the PC increments by 1 each cycle, unless there is a branch instruction.
 ///              Note(cont.): Thus, addr from PC can directly be used in inst. mem instead of right shift.
-/// #Input       clk, rst, branch_flag, zero_flag, imme
-/// #Outputs     inst
+/// #Input       clk, rst, branch_flag, jump_flag, zero_flag, imme
+/// #Outputs     inst, program_counter
 /// #Signals     
 ///         - address: 14-bit address for instruction memory
 ///         - branch_taken_flag: 1 if branch is taken
@@ -23,10 +23,9 @@ module Instruction_Fetch(
     input  [31:0] imme,          /// imm in branch inst, from inst memory
 
     output [31:0] inst,
-    output [31:0] program_counter
+    output reg [31:0] program_counter
 );
 
-reg  [15:0] address;         // Program Counter
 reg         branch_taken_flag;
 wire [2:0]  funct3;  
 
@@ -41,7 +40,7 @@ wire [2:0]  funct3;
   
 Instruction_Memory_ip Instruction_Memory_Instance(
     .clka(clk), 
-    .addra(address[15:2]), 
+    .addra(program_counter[15:2]), 
     .douta(inst)
 ); 
 
@@ -100,18 +99,16 @@ always @(posedge clk)
 begin
     if (rst)
     begin
-        address <= `instruction_initial_address;
+        program_counter <= `instruction_initial_address;
     end
     else if (branch_flag && branch_taken_flag)
     begin
-        address <= address + imme;
+        program_counter <= program_counter + imme;
     end
     else
     begin
-        address <= address + 4;
+        program_counter <= program_counter + 4;
     end
 end
-
-assign program_counter = {16'h0000, address[15:0]}; // sign extension
 
 endmodule

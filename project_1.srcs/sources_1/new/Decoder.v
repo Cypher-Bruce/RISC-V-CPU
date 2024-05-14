@@ -6,7 +6,7 @@
 ///    More than one stage are involved in this module, they are related to register files
 ///     - ID: Get the register values and immediate value based on instruction
 ///     - WB: Write the data back to the register file, eg: load, R-type
-/// #Inputs: clk, rst, write_data, reg_write_flag, inst
+/// #Inputs: clk, rst, write_data, reg_write_flag, inst, program_counter
 /// #Outputs: read_data_1, read_data_2, imme
 /// #Signals:
 ///    - register: 32 registers, each has 32 bits
