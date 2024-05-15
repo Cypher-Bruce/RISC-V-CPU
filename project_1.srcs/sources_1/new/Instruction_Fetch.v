@@ -13,6 +13,9 @@
 ///         - address: 14-bit address for instruction memory
 ///         - branch_taken_flag: 1 if branch is taken
 ///         - funct3: 3-bit funct3 field from instruction
+/// #Note
+///         - PC is updated at the FALLING edge of the clock signal
+///         - To implement uart, instruction memory should be changed to RAM ip core
 
 module Instruction_Fetch(
     input         clk,           /// adjusted clk, from cpu
@@ -25,26 +28,19 @@ module Instruction_Fetch(
     input  [31:0] read_data_1,   /// data from register
 
     output [31:0] inst,
-    output reg [31:0] program_counter
+    output reg [31:0] program_counter,
+
+    // UART Programmer Pinouts
+    input         upg_rst_i,           // UPG reset
+    input         upg_clk_i,           // UPG clk(10MHz)
+    input         upg_wen_i,           // UPG write enable
+    input  [13:0] upg_adr_i,           // UPG write address
+    input  [31:0] upg_dat_i,           // UPG write data
+    input         upg_done_i           // 1 if UPG is done
 );
 
 reg         branch_taken_flag;
 wire [2:0]  funct3;  
-
-////////////////////////// Instruction Memory //////////////////////////
-/// The inst memory is so far a ROM ip core
-/// Config: width=32bits, depth=16384(2^14), capacity=64KB
-/// Paramter: 
-///         - clka: cpu clock signal, 23MHz
-///         - addra: Word addressable. 14-bit from PC, = PC >> 2
-///         - douta: 32-bit instruction
-/// TODO: update inst memory to RAM for UART
-  
-Instruction_Memory_ip Instruction_Memory_Instance(
-    .clka(clk), 
-    .addra(program_counter[15:2]), 
-    .douta(inst)
-); 
 
 ////////////////////////// BRANCH CONTROL //////////////////////////
 /// According to the result and the branch instruction,
@@ -55,11 +51,11 @@ assign funct3 = inst[14:12];
 
 always @*
 begin
-    if (jal_flag || jalr_flag)
+    if (jal_flag || jalr_flag) // J-type
     begin
         branch_taken_flag = 1;
     end
-    else
+    else // B-type
     begin
         case(funct3)
             3'b000: // beq (ALU do sub)
@@ -121,5 +117,36 @@ begin
         program_counter <= program_counter + 4;
     end
 end
+
+/////////////////////////////// Uart ///////////////////////////////
+/// kickOff: mode flag, 1: normal working mode, 0: communication mode
+wire kickOff;
+assign kickOff = upg_rst_i | (~upg_rst_i & upg_done_i);
+
+
+////////////////////////// Instruction Memory //////////////////////////
+/// The inst memory is so far a ROM ip core
+/// Config: width=32bits, depth=16384(2^14), capacity=64KB
+/// Paramter: 
+///         - clka: cpu clock signal, 23MHz
+///         - addra: Word addressable. 14-bit from PC, = PC >> 2
+///         - douta: 32-bit instruction
+/// TODO: update inst memory to RAM for UART
+/// Note: 
+///         - Data is read at the FALLING edge of the clock signal
+///         - To implement UART, instruction memory is changed to RAM ip core
+
+/// temp wire for readability
+wire addra_ram; 
+assign addra_ram = program_counter[15:2];
+
+Instruction_Memory_ip Instruction_Memory_Instance(
+    .clka  (kickOff ? clk             : upg_clk_i),
+    .wea   (kickOff ? 1'b0            : upg_wen_i),
+    .addra (kickOff ? addra_ram       : upg_adr_i),
+    .dina  (kickOff ? 32'h00000000    : upg_dat_i),
+    .douta (inst)
+);
+
 
 endmodule

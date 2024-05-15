@@ -19,30 +19,32 @@ module Data_Memory (
     input       [23:0]  switch,          // switch input, from board
 
     output reg  [31:0]  read_data,       // data read from memory, to register file(load inst.)
-    output reg  [23:0]  led              // led output, to board
+    output reg  [23:0]  led,              // led output, to board
+
+
+    // UART Programmer Pinouts
+    input           upg_rst_i,           // UPG reset
+    input           upg_clk_i,           // UPG ram_clk_i(10MHz)
+    input           upg_wen_i,           // UPG write enable
+    input [13:0]    upg_adr_i,           // UPG write address
+    input [31:0]    upg_dat_i,           // UPG write data
+    input           upg_done_i          // 1 if UPG is done
+
 ); 
+
+///////////////////////// MMIO //////////////////////////
+/// Update: mmio is implemented
 
 wire [31:0] block_memory_read_data; // data read from block memory
 reg  [31:0] io_device_read_data;    // data read from io device
 wire data_flag;                     // which divice to read/write, 0: block memory, 1: io device
 wire [31:0] raw_read_data;          // raw data read chosen from block memory or io device
 
-///////////////////////// DATA MEMORY //////////////////////////
-/// Question: when the data is read or write? rising or falling edge?
-/// !!! Data is read or write at the FALLING edge of the clock signal
-/// No instruction requires read and write at the same time
+/// configure the data flag to choose the data to read: data memory or io device
+assign data_flag = ($unsigned(address[15:0]) >= $unsigned(`IO_device_initial_address)) ? 1 : 0; // 0: block memory, 1: io device
+assign raw_read_data = data_flag ? io_device_read_data : block_memory_read_data;                // choose the data to read
 
-Data_Memory_ip Data_Memory_Instance(
-    .clka(~clk),
-    .wea(data_flag ? 1'b0 : mem_write_flag),
-    .addra(address[15:2]), 
-    .dina(write_data), 
-    .douta(block_memory_read_data)
-);
-
-assign data_flag = ($unsigned(address[15:0]) >= $unsigned(`IO_device_initial_address)) ? 1 : 0;
-assign raw_read_data = data_flag ? io_device_read_data : block_memory_read_data;
-
+/// handle the io device write
 always @(negedge clk) begin
     if (data_flag ? mem_write_flag : 1'b0) begin
         case (address[15:0])
@@ -52,6 +54,7 @@ always @(negedge clk) begin
     end
 end
 
+/// handle the io device read
 always @* begin
     case (address[15:0])
         `switch_initial_address: io_device_read_data = {8'h00, switch};
@@ -59,8 +62,8 @@ always @* begin
     endcase
 end
 
-// handle the different data size (byte/half/word)
-
+/// manipulate the raw data read from block memory or io device, and sign extend it
+/// lb, lh, lw, lbu, lhu
 wire [2:0] funct3;
 assign funct3 = inst[14:12];
 
@@ -108,5 +111,29 @@ always @* begin
             default: read_data = 32'h00000000;
         endcase
 end
+
+///////////////////////// UART  //////////////////////////
+/// kickOff: mode flag, 1: normal working mode, 0: communication mode
+
+wire kickOff = upg_rst_i | (~upg_rst_i & upg_done_i);
+
+
+////////////////////////// DATA MEMORY //////////////////////////
+/// Question: when the data is read or write? rising or falling edge?
+/// !!! Data is read or write at the FALLING edge of the clock signal
+/// No instruction requires read and write at the same time
+
+// temp write enable for readability
+wire ram_wen_i;
+assign ram_wen_i = data_flag ? 1'b0 : mem_write_flag;
+
+Data_Memory_ip Data_Memory_Instance(
+    .clka  (kickOff ? ~clk          : upg_clk_i),
+    .wea   (kickOff ? ram_wen_i     : upg_wen_i),
+    .addra (kickOff ? address[15:2] : upg_adr_i),
+    .dina  (kickOff ? write_data    : upg_dat_i),
+    .douta (block_memory_read_data             )
+);
+
 
 endmodule

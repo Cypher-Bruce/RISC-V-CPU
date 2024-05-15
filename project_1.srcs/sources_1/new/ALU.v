@@ -22,11 +22,13 @@ reg [3:0] ALU_control;
 wire [31:0] operand_2;  // depends on ALU_src_flag: 0 => read_data_2, 1 => imme
 wire [2:0] funct3;
 wire [6:0] funct7;
+wire [6:0] opcode;
 
 assign operand_2 = ALU_src_flag ? imme : read_data_2;
 assign zero_flag = (ALU_result == 0);
 assign funct7 = inst[31:25];
 assign funct3 = inst[14:12];
+assign opcode = inst[6:0];
 
 // ALU_Operation are defined as follows:
 // 00: S-type and load subset of I-type
@@ -53,7 +55,7 @@ always @* begin
             case(funct3)
                 3'b000:
                 begin
-                    if(funct7 == 7'b0000000)
+                    if(funct7 == 7'b0000000 || opcode == 7'b0010011)
                         ALU_control = 4'b0000; // add
                     else
                         ALU_control = 4'b0001; // sub
