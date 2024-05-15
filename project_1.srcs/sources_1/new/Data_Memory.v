@@ -40,9 +40,10 @@ Data_Memory_ip Data_Memory_Instance(
     .douta(block_memory_read_data)
 );
 
-assign data_flag = ($unsigned(address[15:0]) >= $unsigned(`IO_device_initial_address)) ? 1 : 0;
-assign raw_read_data = data_flag ? io_device_read_data : block_memory_read_data;
+assign data_flag = ($unsigned(address[15:0]) >= $unsigned(`IO_device_initial_address)) ? 1 : 0; // 0: block memory, 1: io device
+assign raw_read_data = data_flag ? io_device_read_data : block_memory_read_data;                // choose the data to read
 
+// handle the io device write
 always @(negedge clk) begin
     if (data_flag ? mem_write_flag : 1'b0) begin
         case (address[15:0])
@@ -52,6 +53,7 @@ always @(negedge clk) begin
     end
 end
 
+// handle the io device read
 always @* begin
     case (address[15:0])
         `switch_initial_address: io_device_read_data = {8'h00, switch};
@@ -59,8 +61,8 @@ always @* begin
     endcase
 end
 
-// handle the different data size (byte/half/word)
-
+// manipulate the raw data read from block memory or io device, and sign extend it
+// lb, lh, lw, lbu, lhu
 wire [2:0] funct3;
 assign funct3 = inst[14:12];
 

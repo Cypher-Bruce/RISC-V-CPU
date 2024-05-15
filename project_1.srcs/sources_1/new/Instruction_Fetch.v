@@ -55,11 +55,11 @@ assign funct3 = inst[14:12];
 
 always @*
 begin
-    if (jal_flag || jalr_flag)
+    if (jal_flag || jalr_flag) // J-type
     begin
         branch_taken_flag = 1;
     end
-    else
+    else // B-type
     begin
         case(funct3)
             3'b000: // beq (ALU do sub)
