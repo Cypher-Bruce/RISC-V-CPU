@@ -61,7 +61,8 @@
 !*.elf
 !*.bmm
 !*.xmp
-
+# RISC-V Assembly Files
+!*.asm
 
 
 # End of https://www.toptal.com/developers/gitignore/api/xilinxvivado
