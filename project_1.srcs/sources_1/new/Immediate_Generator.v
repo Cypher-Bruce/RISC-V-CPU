@@ -20,7 +20,7 @@ begin
     begin
         imme = 32'b0;
     end
-    7'b0010011, 7'b1100111: // I
+    7'b0010011, 7'b0000011, 7'b1100111: // I
     begin
         imme = {{20{inst[31]}}, inst[31:20]};
     end
