@@ -44,8 +44,10 @@ assign data_flag = ($unsigned(address[15:0]) >= $unsigned(`IO_device_initial_add
 assign raw_read_data = data_flag ? io_device_read_data : block_memory_read_data;                // choose the data to read
 
 // handle the io device write
+wire write_led_enable;
+assign write_led_enable = data_flag ? mem_write_flag : 1'b0;
 always @(negedge clk) begin
-    if (data_flag ? mem_write_flag : 1'b0) begin
+    if (write_led_enable) begin
         case (address[15:0])
             `led_initial_address: led <= write_data[23:0];
             default: led <= led;
