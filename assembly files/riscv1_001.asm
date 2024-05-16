@@ -1,8 +1,19 @@
-#åœºæ™¯1-001
+#³¡¾°1-001
+.data 
+   led:    .half 0xFFC0  
+   switch: .half 0xFFC4
+   tube: .half 0xCFCC
+   memory: .half 0xCCCC
+   
 .text
-	#read int ç”¨lwï¼Ÿ
-	#print int ç”¨swï¼Ÿ
-	#å‡è®¾I/Oçš„åŸºåœ°å€å­˜å‚¨åœ¨t0å’Œt1ï¼Œmemoryçš„åŸºåœ°å€åœ¨t2?
-	lb a1, 0(t0) #ç”¨lbçš„æ–¹å¼æŠŠaå­˜å…¥a1
-	sw a1, 0(t1) #è¾“å‡º
-	sw a1, 0(t2) #å­˜åˆ°memoryä¸­
+lh t0, switch #t0 :address of switch
+lh t1, led # t1: address of led
+lh t2, tube # t2: address of tube segment ÊıÂë¹ÜµØÖ·
+lh t3, memory # t3: address of memory
+
+lb a1, 2(t0)
+sw a1, 0(t2) # ºóĞøĞèÒª¶ş½øÖÆ×ªÊ®Áù½øÖÆ£¬ÏÔÊ¾ÔÚÊıÂë¹Ü»òVGAÉÏ
+addi sp, sp, -8
+sw a1, 0(sp) # Ôİ´æÔÚdata memoryµÄstack-8ÉÏ
+addi sp, sp, 8 # »Ö¸´µØÖ·
+

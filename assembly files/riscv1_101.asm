@@ -1,15 +1,32 @@
-#åœºæ™¯1-101
+#³¡¾°1-101
+.data 
+   led:    .half 0xFFC0  
+   switch: .half 0xFFC4
+   tube: .half 0xCFCC
+   memory: .half 0xCCCC
+   
 .text
-	#read int ç”¨lwï¼Ÿ
-	#print int ç”¨swï¼Ÿ
-	#å‡è®¾I/Oçš„åŸºåœ°å€å­˜å‚¨åœ¨t0å’Œt1ï¼Œmemoryçš„åŸºåœ°å€åœ¨t2?
-	lw a1, 0(t2) #ä»ç”¨ä¾‹001ä¸­å–å‡ºaå­˜åˆ°å¯„å­˜å™¨a1
-	lw a2, 4(t2) #ä»ç”¨ä¾‹010ä¸­å–å‡ºbå­˜åˆ°å¯„å­˜å™¨a2
-	bge a1, a2, led
-	jal exit #å…³ç³»ä¸æˆç«‹ï¼Œä»€ä¹ˆéƒ½ä¸åš
-led:
-	#å‡è®¾ledç¯äº®çš„æ§åˆ¶ä¿¡å·æ‰€åœ¨çš„åŸºåœ°å€æ˜¯s0
-	li a0, 1
-	sw a0, 0(s0) #æŠŠ1ä¼ è¿›å»ï¼Œç‚¹äº®ç¬¬ä¸€ä¸ªledç¯ï¼ˆåœ¨åŸºåœ°å€çš„ledï¼‰
+lh t0, switch #t0 :address of switch
+lh t1, led # t1: address of led
+lh t2, tube # t2: address of tube segment ÊıÂë¹ÜµØÖ·
+lh t3, memory # t3: address of memory
+   
+.text
+lh t0, switch #t0 :address of switch
+lh t1, led # t1: address of led
+lh t2, tube # t2: address of tube segment ÊıÂë¹ÜµØÖ·
+lh t3, memory # t3: address of memory
+
+	addi sp, sp, -8
+	lw a1, 0(sp) # ´ÓÓÃÀı001ÖĞ£¨Ôİ´æÔÚÁËsp-8£©È¡³öa´æµ½¼Ä´æÆ÷a1
+	lw a2, 4(sp) # ´ÓÓÃÀı010ÖĞ£¨Ôİ´æÔÚÁËsp-4£©È¡³öb´æµ½¼Ä´æÆ÷a2
+	addi sp, sp, 8 # »Ö¸´stack pointer
+	bge a1, a2, lit
+	li a0£¬0
+	sw a0, 0(t1) # °Ñ24Î»È«0´«½øÈ¥£¬Ï¨ÃğËùÓĞledµÆ
+	jal exit #¹ØÏµ²»³ÉÁ¢£¬Ê²Ã´¶¼²»×ö
+lit:
+	#ledµÆµÄ»ùµØÖ·Îªt1
+	li a0, 0xffffff
+	sw a0, 0(t1) #°Ñ24Î»È«1(0xffffff)´«½øÈ¥£¬µãÁÁËùÓĞledµÆ
 exit:
-	
