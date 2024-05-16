@@ -31,6 +31,14 @@ module Instruction_Fetch(
 reg         branch_taken_flag;
 wire [2:0]  funct3;  
 
+////////////////////////// ADDRESS SHIFTING //////////////////////////
+/// We use memory layout like this: https://photos.app.goo.gl/8xTAXyCikpdyna5V9
+/// Because it's not possible to access various memory IP cores using absolute addresses in the address space,
+/// it's necessary to perform address offsetting when accessing IP core addresses: absolute address - offset within the address section.
+/// Therefore, when accessing instruction memory, no address adjustment is required,
+/// whereas when accessing data memory, the absolute address needs to be subtracted by 0x2000.
+
+
 ////////////////////////// Instruction Memory //////////////////////////
 /// The inst memory is so far a ROM ip core
 /// Config: width=32bits, depth=16384(2^14), capacity=64KB

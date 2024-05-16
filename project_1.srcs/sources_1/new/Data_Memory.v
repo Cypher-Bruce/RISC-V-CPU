@@ -5,13 +5,13 @@
 ///     This module is the data memory module. It is used to store the data in the memory.
 ///     It has a 14-bit address bus and a 32-bit data bus. 
 ///     Data Memory is implemented with ipcore, it is a RAM
-/// #Input: clk, address, write_data, inst, mem_read_flag, mem_write_flag, switch
+/// #Input: clk, address_absolute, write_data, inst, mem_read_flag, mem_write_flag, switch
 /// #Output: read_data, led
 /// #TODO: update the module for UART
 
 module Data_Memory (
     input               clk,             // adjusted clk signal, from cpu_top
-    input       [31:0]  address,         // 14-bit address bus, from ALU
+    input       [31:0]  address_absolute,         // 14-bit address bus, from ALU
     input       [31:0]  write_data,      // data to be written in memory, from ALU
     input       [31:0]  inst,            // instruction from inst memory (to determine output byte/half/word)
     input               mem_read_flag,   // read flag, from controller
@@ -26,6 +26,18 @@ wire [31:0] block_memory_read_data; // data read from block memory
 reg  [31:0] io_device_read_data;    // data read from io device
 wire data_flag;                     // which divice to read/write, 0: block memory, 1: io device
 wire [31:0] raw_read_data;          // raw data read chosen from block memory or io device
+
+////////////////////////// ADDRESS SHIFTING //////////////////////////
+/// We use memory layout like this: https://photos.app.goo.gl/8xTAXyCikpdyna5V9
+/// Because it's not possible to access various memory IP cores using absolute addresses in the address space,
+/// it's necessary to perform address offsetting when accessing IP core addresses: absolute address - offset within the address section.
+/// Therefore, when accessing instruction memory, no address adjustment is required,
+/// whereas when accessing data memory, the absolute address needs to be subtracted by 0x2000.
+
+reg [31:0] address;
+always @* begin
+    address = address_absolute - `data_memory_initial_address;
+end
 
 ///////////////////////// DATA MEMORY //////////////////////////
 /// Question: when the data is read or write? rising or falling edge?

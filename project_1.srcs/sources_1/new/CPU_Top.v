@@ -119,7 +119,7 @@ wire [31:0] data_memory_data;
 Data_Memory Data_Memory_Instance(
     .clk(clk),
     .inst(inst),
-    .address(ALU_result),
+    .address_absolute(ALU_result),
     .write_data(reg_data_2),        
     .switch(switch),
     .mem_read_flag(mem_read_flag),
