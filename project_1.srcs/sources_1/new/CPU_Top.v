@@ -47,16 +47,16 @@ module CPU_Top(
 
 ////////////////////////// Clock divisions //////////////////////////
 wire clk;
-wire clk_fpga;
+wire clk_uart;
 CPU_Main_Clock_ip CPU_Main_Clock_Instance( 
     .clk_in1(raw_clk), 
     .clk_out1(clk) ,
-    .clk_out2(clk_fpga)
+    .clk_out2(clk_uart)
 );
 
 ////////////////////////////// UART /////////////////////////////
 /// #Signal
-///    -upg_clk: SHOULD BE clk_fpga
+///    -upg_clk: SHOULD BE clk_uart
 ///    -upg_clk_o: clock signal for UART programmer
 ///    -upg_wen_o: write enable signal for UART programmer
 ///    -upg_done_o: UART programmer done signal
@@ -80,7 +80,7 @@ button_debounce U1(clk, ~rst_fpga, button_start_pg, spg_bufg);
 
 /// Generate UART Programmer reset signal
 reg upg_rst;
-always @ (posedge clk_fpga) begin
+always @ (posedge clk_uart) begin
     if (spg_bufg) upg_rst <= 0;
     if (rst_fpga) upg_rst <= 1;
 end
@@ -91,7 +91,7 @@ assign rst = rst_fpga | !upg_rst;
 
 /// UART Programmer
 uart_bmpg_0 uart(
-    .upg_clk_i(clk_fpga),
+    .upg_clk_i(clk_uart),
     .upg_rst_i(upg_rst),
     .upg_rx_i(rx),
     .upg_clk_o(upg_clk_o),
@@ -192,7 +192,7 @@ Data_Memory Data_Memory_Instance(
 
     // UART Programmer Pinouts
     .upg_rst_i(upg_rst),
-    .upg_clk_i(clk_fpga),
+    .upg_clk_i(clk_uart),
     .upg_wen_i(upg_wen_o),
     .upg_adr_i(upg_adr_o),
     .upg_dat_i(upg_dat_o),
