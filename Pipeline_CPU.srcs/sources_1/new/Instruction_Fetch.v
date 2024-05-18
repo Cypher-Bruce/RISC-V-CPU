@@ -17,11 +17,11 @@
 module Instruction_Fetch(
     input             clk,           /// adjusted clk, from cpu
     input             rst,           /// reset signal, from cpu
-    input             pc_src_flag,
+    input             branch_taken_flag,
     input      [31:0] branch_pc,
     input             stall_flag,
 
-    output     [31:0] inst,
+    output reg [31:0] program_counter,
     output reg [31:0] prev_pc
 );
 
@@ -32,22 +32,6 @@ module Instruction_Fetch(
 /// Therefore, when accessing instruction memory, no address adjustment is required,
 /// whereas when accessing data memory, the absolute address needs to be subtracted by 0x2000.
 
-
-////////////////////////// Instruction Memory //////////////////////////
-/// The inst memory is so far a ROM ip core
-/// Config: width=32bits, depth=16384(2^14), capacity=64KB
-/// Paramter: 
-///         - clka: cpu clock signal, 23MHz
-///         - addra: Word addressable. 14-bit from PC, = PC >> 2
-///         - douta: 32-bit instruction
-/// TODO: update inst memory to RAM for UART
-  
-Instruction_Memory_ip Instruction_Memory_ip_Instance(
-    .clka(clk), 
-    .addra(program_counter[15:2]), 
-    .douta(inst)
-); 
-
 ////////////////////////// PC //////////////////////////
 /// Three cases for PC
 /// Case1. rst: set PC to initial address
@@ -56,20 +40,18 @@ Instruction_Memory_ip Instruction_Memory_ip_Instance(
 /// Note that actual address sent to memory ip core is address >> 2
 /// !!! PC is updated at the FALLING edge of the clock signal, for more details, refer to https://imgur.com/a/zZdYXqu
 
-reg [31:0] program_counter;
-
 always @(negedge clk) begin
     if (rst) begin
         program_counter <= `inst_memory_initial_address;
         prev_pc <= `inst_memory_initial_address;
     end
+    else if (branch_taken_flag) begin
+        program_counter <= branch_pc;
+        prev_pc <= program_counter;
+    end
     else if (stall_flag) begin
         program_counter <= program_counter;
         prev_pc <= prev_pc;
-    end
-    else if (pc_src_flag) begin
-        program_counter <= branch_pc;
-        prev_pc <= program_counter;
     end
     else begin
         program_counter <= program_counter + 4;

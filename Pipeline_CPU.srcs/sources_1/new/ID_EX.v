@@ -4,6 +4,7 @@ module ID_EX(
     input clk,
     input rst,
     input stall_flag,
+    input branch_taken_flag,
 
     input branch_flag_ID,
     input [1:0] ALU_operation_ID,
@@ -47,7 +48,7 @@ module ID_EX(
 );
 
 always @(posedge clk) begin
-    if (rst || stall_flag) begin
+    if (rst || stall_flag || branch_taken_flag) begin
         branch_flag_EX <= 1'b0;
         ALU_operation_EX <= 2'b00;
         ALU_src_flag_EX <= 1'b0;

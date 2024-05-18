@@ -4,6 +4,7 @@ module IF_ID(
     input clk,
     input rst,
     input stall_flag,
+    input branch_taken_flag,
     
     input [31:0] inst_IF,
     input [31:0] program_counter_IF,
@@ -13,7 +14,7 @@ module IF_ID(
 );
 
 always @(posedge clk) begin
-    if (rst) begin
+    if (rst || branch_taken_flag) begin
         inst_ID <= 32'b0;
         program_counter_ID <= 32'b0;
     end 

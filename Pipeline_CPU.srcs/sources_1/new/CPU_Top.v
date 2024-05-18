@@ -45,20 +45,39 @@ CPU_Main_Clock_ip CPU_Main_Clock_ip_Instance(
 
 ////////// Instruction Fetch //////////
 
-wire pc_src_flag;
+///// Instruction Fetch Module /////
+
+wire branch_taken_flag;
 wire [31:0] branch_pc;
 wire stall_flag;
-wire [31:0] inst_IF;
-wire [31:0] program_counter_IF;
+wire [31:0] program_counter_raw;
+wire [31:0] prev_pc;
 
 Instruction_Fetch Instruction_Fetch_Instance(
     .clk(clk),
     .rst(rst),
-    .pc_src_flag(pc_src_flag),
+    .branch_taken_flag(branch_taken_flag),
     .branch_pc(branch_pc),
     .stall_flag(stall_flag),
-    .inst(inst_IF),
-    .prev_pc(program_counter_IF)
+    .program_counter(program_counter_raw),
+    .prev_pc(prev_pc)
+);
+
+// The reason why we send prev_pc to the next stage (instead of program_counter_raw) is that: 
+// only in the first half of the clock cycle,
+// the program_counter_raw does correspond to the instruction fetched in the same cycle.
+// In the second half of the clock cycle, the program_counter_raw is updated to determine
+// the address of the next instruction to be fetched.
+// You can see this design in the IF/ID pipeline register declaration right below.
+
+///// Instruction Memory /////
+
+wire [31:0] inst_IF;
+
+Instruction_Memory Instruction_Memory_Instance(
+    .clk(clk),
+    .program_counter(program_counter_raw),
+    .inst(inst_IF)
 );
 
 ////////// IF/ID //////////
@@ -70,8 +89,9 @@ IF_ID IF_ID_Instance(
     .clk(clk),
     .rst(rst),
     .stall_flag(stall_flag),
+    .branch_taken_flag(branch_taken_flag),
     .inst_IF(inst_IF),
-    .program_counter_IF(program_counter_IF),
+    .program_counter_IF(prev_pc),
     .inst_ID(inst_ID),
     .program_counter_ID(program_counter_ID)
 );
@@ -175,6 +195,7 @@ ID_EX ID_EX_Instance(
     .clk(clk),
     .rst(rst),
     .stall_flag(stall_flag),
+    .branch_taken_flag(branch_taken_flag),
     .branch_flag_ID(branch_flag_ID),
     .ALU_operation_ID(ALU_operation_ID),
     .ALU_src_flag_ID(ALU_src_flag_ID),
@@ -279,6 +300,7 @@ wire [31:0] program_counter_MEM;
 EX_MEM EX_MEM_Instance(
     .clk(clk),
     .rst(rst),
+    .branch_taken_flag(branch_taken_flag),
     .ALU_result_EX(ALU_result_EX),
     .zero_flag_EX(zero_flag_EX),
     .branch_flag_EX(branch_flag_EX),
@@ -324,7 +346,7 @@ Branch_Target Branch_Target_Instance(
     .imme(imme_MEM),
     .program_counter(program_counter_MEM),
     .inst(inst_MEM),
-    .pc_src_flag(pc_src_flag),
+    .branch_taken_flag(branch_taken_flag),
     .branch_pc(branch_pc)
 );
 

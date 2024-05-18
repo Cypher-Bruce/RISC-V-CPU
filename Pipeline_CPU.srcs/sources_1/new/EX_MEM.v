@@ -3,6 +3,7 @@
 module EX_MEM(
     input clk,
     input rst,
+    input branch_taken_flag,
 
     input [31:0] ALU_result_EX,
     input zero_flag_EX,
@@ -38,7 +39,7 @@ module EX_MEM(
 );
 
 always @(posedge clk) begin
-    if (rst) begin
+    if (rst || branch_taken_flag) begin
         ALU_result_MEM <= 32'b0;
         zero_flag_MEM <= 1'b0;
         branch_flag_MEM <= 1'b0;
