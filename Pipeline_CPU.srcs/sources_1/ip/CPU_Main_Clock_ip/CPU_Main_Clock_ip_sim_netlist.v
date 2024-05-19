@@ -1,9 +1,9 @@
 // Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2017.4 (win64) Build 2086221 Fri Dec 15 20:55:39 MST 2017
-// Date        : Fri May 17 22:19:07 2024
+// Date        : Sun May 19 16:55:59 2024
 // Host        : Cypher_Bruce running 64-bit major release  (build 9200)
-// Command     : write_verilog -force -mode funcsim {c:/Users/Cyphe/Documents/SUSTech Assignment/Term 4/Computer
+// Command     : write_verilog -force -mode funcsim {C:/Users/Cyphe/Documents/SUSTech Assignment/Term 4/Computer
 //               Organization/Project/Pipeline/Pipeline_CPU.srcs/sources_1/ip/CPU_Main_Clock_ip/CPU_Main_Clock_ip_sim_netlist.v}
 // Design      : CPU_Main_Clock_ip
 // Purpose     : This verilog netlist is a functional simulation representation of the design and should not be modified
@@ -19,7 +19,7 @@ module CPU_Main_Clock_ip
   output clk_out1;
   input clk_in1;
 
-  (* IBUF_LOW_PWR *) wire clk_in1;
+  wire clk_in1;
   wire clk_out1;
 
   CPU_Main_Clock_ip_CPU_Main_Clock_ip_clk_wiz inst
@@ -35,7 +35,6 @@ module CPU_Main_Clock_ip_CPU_Main_Clock_ip_clk_wiz
   input clk_in1;
 
   wire clk_in1;
-  wire clk_in1_CPU_Main_Clock_ip;
   wire clk_out1;
   wire clk_out1_CPU_Main_Clock_ip;
   wire clkfbout_CPU_Main_Clock_ip;
@@ -53,15 +52,6 @@ module CPU_Main_Clock_ip_CPU_Main_Clock_ip_clk_wiz
   BUFG clkf_buf
        (.I(clkfbout_CPU_Main_Clock_ip),
         .O(clkfbout_buf_CPU_Main_Clock_ip));
-  (* BOX_TYPE = "PRIMITIVE" *) 
-  (* CAPACITANCE = "DONT_CARE" *) 
-  (* IBUF_DELAY_VALUE = "0" *) 
-  (* IFD_DELAY_VALUE = "AUTO" *) 
-  IBUF #(
-    .IOSTANDARD("DEFAULT")) 
-    clkin1_ibufg
-       (.I(clk_in1),
-        .O(clk_in1_CPU_Main_Clock_ip));
   (* BOX_TYPE = "PRIMITIVE" *) 
   BUFG clkout1_buf
        (.I(clk_out1_CPU_Main_Clock_ip),
@@ -102,7 +92,7 @@ module CPU_Main_Clock_ip_CPU_Main_Clock_ip_clk_wiz
     plle2_adv_inst
        (.CLKFBIN(clkfbout_buf_CPU_Main_Clock_ip),
         .CLKFBOUT(clkfbout_CPU_Main_Clock_ip),
-        .CLKIN1(clk_in1_CPU_Main_Clock_ip),
+        .CLKIN1(clk_in1),
         .CLKIN2(1'b0),
         .CLKINSEL(1'b1),
         .CLKOUT0(clk_out1_CPU_Main_Clock_ip),

@@ -76,9 +76,7 @@ module CPU_Main_Clock_ip_clk_wiz
   //------------------------------------
 wire clk_in1_CPU_Main_Clock_ip;
 wire clk_in2_CPU_Main_Clock_ip;
-  IBUF clkin1_ibufg
-   (.O (clk_in1_CPU_Main_Clock_ip),
-    .I (clk_in1));
+  assign clk_in1_CPU_Main_Clock_ip = clk_in1;
 
 
 

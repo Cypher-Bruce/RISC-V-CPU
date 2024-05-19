@@ -31,7 +31,8 @@ module CPU_Top(
     input         rst,        // effect of rst: clear all the registers, set PC to 0, active high
     input  [23:0] switch,
     input  [4:0]  button,
-    output [23:0] led
+    output [23:0] led,
+    output [31:0] seven_seg_tube
 );
 
 ////////// Clock Signal //////////
@@ -418,13 +419,16 @@ Data_Memory Data_Memory_Instance(
 
 IO_Device_Memory IO_Device_Memory_Instance(
     .clk(clk),
+    .rst(rst),
     .address_absolute(ALU_result_MEM),
     .write_data(read_data_2_MEM),
     .read_flag(io_device_read_flag),
     .write_flag(io_device_write_flag),
     .switch(switch),
+    .button(button),
     .read_data(io_device_read_data),
-    .led(led)
+    .led(led),
+    .seven_seg_tube(seven_seg_tube)
 );
 
 ////////// MEM/WB //////////

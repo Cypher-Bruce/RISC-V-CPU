@@ -7,12 +7,14 @@ reg rst;
 reg [23:0] switch;
 reg [4:0] button;
 wire [23:0] led;
+wire [31:0] seven_seg_tube;
 CPU_Top CPU_Top_Instance(
     .raw_clk(raw_clk),
     .rst(rst),
     .switch(switch),
     .button(button),
-    .led(led)
+    .led(led),
+    .seven_seg_tube(seven_seg_tube)
 );
 
 initial begin

@@ -1,9 +1,9 @@
 // Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2017.4 (win64) Build 2086221 Fri Dec 15 20:55:39 MST 2017
-// Date        : Fri May 17 22:19:07 2024
+// Date        : Sun May 19 16:55:59 2024
 // Host        : Cypher_Bruce running 64-bit major release  (build 9200)
-// Command     : write_verilog -force -mode synth_stub {c:/Users/Cyphe/Documents/SUSTech Assignment/Term 4/Computer
+// Command     : write_verilog -force -mode synth_stub {C:/Users/Cyphe/Documents/SUSTech Assignment/Term 4/Computer
 //               Organization/Project/Pipeline/Pipeline_CPU.srcs/sources_1/ip/CPU_Main_Clock_ip/CPU_Main_Clock_ip_stub.v}
 // Design      : CPU_Main_Clock_ip
 // Purpose     : Stub declaration of top-level module interface
