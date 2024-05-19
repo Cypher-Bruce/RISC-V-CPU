@@ -47,18 +47,20 @@ CPU_Main_Clock_ip CPU_Main_Clock_ip_Instance(
 
 ///// Instruction Fetch Module /////
 
-wire branch_taken_flag;
+wire wrong_prediction_flag;
 wire [31:0] branch_pc;
 wire stall_flag;
+wire [31:0] program_counter_prediction_IF;
 wire [31:0] program_counter_raw;
 wire [31:0] prev_pc;
 
 Instruction_Fetch Instruction_Fetch_Instance(
     .clk(clk),
     .rst(rst),
-    .branch_taken_flag(branch_taken_flag),
+    .wrong_prediction_flag(wrong_prediction_flag),
     .branch_pc(branch_pc),
     .stall_flag(stall_flag),
+    .program_counter_prediction(program_counter_prediction_IF),
     .program_counter(program_counter_raw),
     .prev_pc(prev_pc)
 );
@@ -80,20 +82,40 @@ Instruction_Memory Instruction_Memory_Instance(
     .inst(inst_IF)
 );
 
+///// Program Counter Prediction /////
+
+wire branch_flag_MEM;
+wire [31:0] program_counter_MEM;
+wire [31:0] prev_pcp;
+
+Program_Counter_Prediction Program_Counter_Prediction_Instance(
+    .clk(clk),
+    .rst(rst),
+    .branch_from_pc(program_counter_MEM),
+    .branch_to_pc(branch_pc),
+    .program_counter(program_counter_raw),
+    .branch_flag(branch_flag_MEM),
+    .program_counter_prediction(program_counter_prediction_IF),
+    .prev_pcp(prev_pcp)
+);
+
 ////////// IF/ID //////////
 
 wire [31:0] inst_ID;
 wire [31:0] program_counter_ID;
+wire [31:0] program_counter_prediction_ID;
 
 IF_ID IF_ID_Instance(
     .clk(clk),
     .rst(rst),
     .stall_flag(stall_flag),
-    .branch_taken_flag(branch_taken_flag),
+    .wrong_prediction_flag(wrong_prediction_flag),
     .inst_IF(inst_IF),
     .program_counter_IF(prev_pc),
+    .program_counter_prediction_IF(prev_pcp),
     .inst_ID(inst_ID),
-    .program_counter_ID(program_counter_ID)
+    .program_counter_ID(program_counter_ID),
+    .program_counter_prediction_ID(program_counter_prediction_ID)
 );
 
 ////////// Instruction Decode //////////
@@ -190,12 +212,13 @@ wire [4:0] read_reg_idx_2_EX;
 wire [4:0] write_reg_idx_EX;
 wire [31:0] inst_EX;
 wire [31:0] program_counter_EX;
+wire [31:0] program_counter_prediction_EX;
 
 ID_EX ID_EX_Instance(
     .clk(clk),
     .rst(rst),
     .stall_flag(stall_flag),
-    .branch_taken_flag(branch_taken_flag),
+    .wrong_prediction_flag(wrong_prediction_flag),
     .branch_flag_ID(branch_flag_ID),
     .ALU_operation_ID(ALU_operation_ID),
     .ALU_src_flag_ID(ALU_src_flag_ID),
@@ -215,6 +238,7 @@ ID_EX ID_EX_Instance(
     .write_reg_idx_ID(write_reg_idx_ID),
     .inst_ID(inst_ID),
     .program_counter_ID(program_counter_ID),
+    .program_counter_prediction_ID(program_counter_prediction_ID),
     .branch_flag_EX(branch_flag_EX),
     .ALU_operation_EX(ALU_operation_EX),
     .ALU_src_flag_EX(ALU_src_flag_EX),
@@ -233,7 +257,8 @@ ID_EX ID_EX_Instance(
     .read_reg_idx_2_EX(read_reg_idx_2_EX),
     .write_reg_idx_EX(write_reg_idx_EX),
     .inst_EX(inst_EX),
-    .program_counter_EX(program_counter_EX)
+    .program_counter_EX(program_counter_EX),
+    .program_counter_prediction_EX(program_counter_prediction_EX)
 );
 
 ////////// Execute //////////
@@ -283,7 +308,7 @@ ALU ALU_Instance(
 
 wire [31:0] ALU_result_MEM;
 wire zero_flag_MEM;
-wire branch_flag_MEM;
+// wire branch_flag_MEM;
 wire mem_read_flag_MEM;
 wire mem_write_flag_MEM;
 wire mem_to_reg_flag_MEM;
@@ -295,12 +320,13 @@ wire [31:0] read_data_1_MEM;
 wire [31:0] read_data_2_MEM;
 wire [4:0] write_reg_idx_MEM;
 wire [31:0] inst_MEM;
-wire [31:0] program_counter_MEM;
+// wire [31:0] program_counter_MEM;
+wire [31:0] program_counter_prediction_MEM;
 
 EX_MEM EX_MEM_Instance(
     .clk(clk),
     .rst(rst),
-    .branch_taken_flag(branch_taken_flag),
+    .wrong_prediction_flag(wrong_prediction_flag),
     .ALU_result_EX(ALU_result_EX),
     .zero_flag_EX(zero_flag_EX),
     .branch_flag_EX(branch_flag_EX),
@@ -316,6 +342,7 @@ EX_MEM EX_MEM_Instance(
     .write_reg_idx_EX(write_reg_idx_EX),
     .inst_EX(inst_EX),
     .program_counter_EX(program_counter_EX),
+    .program_counter_prediction_EX(program_counter_prediction_EX),
     .ALU_result_MEM(ALU_result_MEM),
     .zero_flag_MEM(zero_flag_MEM),
     .branch_flag_MEM(branch_flag_MEM),
@@ -330,7 +357,8 @@ EX_MEM EX_MEM_Instance(
     .read_data_2_MEM(read_data_2_MEM),
     .write_reg_idx_MEM(write_reg_idx_MEM),
     .inst_MEM(inst_MEM),
-    .program_counter_MEM(program_counter_MEM)
+    .program_counter_MEM(program_counter_MEM),
+    .program_counter_prediction_MEM(program_counter_prediction_MEM)
 );
 
 ////////// Memory //////////
@@ -346,7 +374,8 @@ Branch_Target Branch_Target_Instance(
     .imme(imme_MEM),
     .program_counter(program_counter_MEM),
     .inst(inst_MEM),
-    .branch_taken_flag(branch_taken_flag),
+    .program_counter_prediction(program_counter_prediction_MEM),
+    .wrong_prediction_flag(wrong_prediction_flag),
     .branch_pc(branch_pc)
 );
 

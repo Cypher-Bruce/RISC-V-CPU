@@ -1,4 +1,4 @@
-#³¡¾°1-000
+#test case 1-0
 .data 
    led:    .half 0xFFC0  
    switch: .half 0xFFC4

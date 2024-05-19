@@ -4,7 +4,7 @@ module ID_EX(
     input clk,
     input rst,
     input stall_flag,
-    input branch_taken_flag,
+    input wrong_prediction_flag,
 
     input branch_flag_ID,
     input [1:0] ALU_operation_ID,
@@ -25,6 +25,7 @@ module ID_EX(
     input [4:0] write_reg_idx_ID,
     input [31:0] inst_ID,
     input [31:0] program_counter_ID,
+    input [31:0] program_counter_prediction_ID,
 
     output reg branch_flag_EX,
     output reg [1:0] ALU_operation_EX,
@@ -44,11 +45,12 @@ module ID_EX(
     output reg [4:0] read_reg_idx_2_EX,
     output reg [4:0] write_reg_idx_EX,
     output reg [31:0] inst_EX,
-    output reg [31:0] program_counter_EX
+    output reg [31:0] program_counter_EX,
+    output reg [31:0] program_counter_prediction_EX
 );
 
 always @(posedge clk) begin
-    if (rst || stall_flag || branch_taken_flag) begin
+    if (rst || stall_flag || wrong_prediction_flag) begin
         branch_flag_EX <= 1'b0;
         ALU_operation_EX <= 2'b00;
         ALU_src_flag_EX <= 1'b0;
@@ -68,6 +70,7 @@ always @(posedge clk) begin
         write_reg_idx_EX <= 5'b0;
         inst_EX <= 32'b0;
         program_counter_EX <= 32'b0;
+        program_counter_prediction_EX <= 32'b0;
     end
     else begin
         branch_flag_EX <= branch_flag_ID;
@@ -89,6 +92,7 @@ always @(posedge clk) begin
         write_reg_idx_EX <= write_reg_idx_ID;
         inst_EX <= inst_ID;
         program_counter_EX <= program_counter_ID;
+        program_counter_prediction_EX <= program_counter_prediction_ID;
     end
 end
 

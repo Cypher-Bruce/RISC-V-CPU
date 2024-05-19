@@ -3,7 +3,7 @@
 module EX_MEM(
     input clk,
     input rst,
-    input branch_taken_flag,
+    input wrong_prediction_flag,
 
     input [31:0] ALU_result_EX,
     input zero_flag_EX,
@@ -20,6 +20,7 @@ module EX_MEM(
     input [4:0] write_reg_idx_EX,
     input [31:0] inst_EX,
     input [31:0] program_counter_EX,
+    input [31:0] program_counter_prediction_EX,
 
     output reg [31:0] ALU_result_MEM,
     output reg zero_flag_MEM,
@@ -35,11 +36,12 @@ module EX_MEM(
     output reg [31:0] read_data_2_MEM,
     output reg [4:0] write_reg_idx_MEM,
     output reg [31:0] inst_MEM,
-    output reg [31:0] program_counter_MEM
+    output reg [31:0] program_counter_MEM,
+    output reg [31:0] program_counter_prediction_MEM
 );
 
 always @(posedge clk) begin
-    if (rst || branch_taken_flag) begin
+    if (rst || wrong_prediction_flag) begin
         ALU_result_MEM <= 32'b0;
         zero_flag_MEM <= 1'b0;
         branch_flag_MEM <= 1'b0;
@@ -55,6 +57,7 @@ always @(posedge clk) begin
         write_reg_idx_MEM <= 5'b0;
         inst_MEM <= 32'b0;
         program_counter_MEM <= 32'b0;
+        program_counter_prediction_MEM <= 32'b0;
     end 
     else begin
         ALU_result_MEM <= ALU_result_EX;
@@ -72,6 +75,7 @@ always @(posedge clk) begin
         write_reg_idx_MEM <= write_reg_idx_EX;
         inst_MEM <= inst_EX;
         program_counter_MEM <= program_counter_EX;
+        program_counter_prediction_MEM <= program_counter_prediction_EX;
     end
 end
 

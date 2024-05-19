@@ -9,8 +9,9 @@ module Branch_Target(
     input      [31:0] imme,
     input      [31:0] program_counter,
     input      [31:0] inst,
+    input      [31:0] program_counter_prediction,
 
-    output reg        branch_taken_flag,
+    output            wrong_prediction_flag,
     output reg [31:0] branch_pc
 );
 
@@ -20,6 +21,7 @@ module Branch_Target(
 // unconditional branch: jal, jalr
 // conditional branch: beq, bne, blt, bge, bltu, bgeu
 wire [2:0] funct3;
+reg branch_taken_flag;
 assign funct3 = inst[14:12];
 
 always @* begin
@@ -74,12 +76,14 @@ always @* begin
     else if (jal_flag) begin
         branch_pc = program_counter + imme;
     end
-    else if (branch_flag) begin
+    else if (branch_taken_flag) begin
         branch_pc = program_counter + imme;
     end
     else begin
-        branch_pc = 32'h0;
+        branch_pc = program_counter + 4;
     end
 end
+
+assign wrong_prediction_flag = (branch_pc != program_counter_prediction && branch_flag);
 
 endmodule

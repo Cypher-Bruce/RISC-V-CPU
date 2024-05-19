@@ -11,15 +11,15 @@
 /// #Outputs     inst, program_counter
 /// #Signals     
 ///         - address: 14-bit address for instruction memory
-///         - branch_taken_flag: 1 if branch is taken
 ///         - funct3: 3-bit funct3 field from instruction
 
 module Instruction_Fetch(
     input             clk,           /// adjusted clk, from cpu
     input             rst,           /// reset signal, from cpu
-    input             branch_taken_flag,
+    input             wrong_prediction_flag,
     input      [31:0] branch_pc,
     input             stall_flag,
+    input      [31:0] program_counter_prediction,
 
     output reg [31:0] program_counter,
     output reg [31:0] prev_pc
@@ -32,20 +32,13 @@ module Instruction_Fetch(
 /// Therefore, when accessing instruction memory, no address adjustment is required,
 /// whereas when accessing data memory, the absolute address needs to be subtracted by 0x2000.
 
-////////////////////////// PC //////////////////////////
-/// Three cases for PC
-/// Case1. rst: set PC to initial address
-/// Case2. branch_flag && branch_taken_flag: increment PC with imme
-/// Case3. default: increment PC by 4
-/// Note that actual address sent to memory ip core is address >> 2
-/// !!! PC is updated at the FALLING edge of the clock signal, for more details, refer to https://imgur.com/a/zZdYXqu
 
 always @(negedge clk) begin
     if (rst) begin
         program_counter <= `inst_memory_initial_address;
         prev_pc <= `inst_memory_initial_address;
     end
-    else if (branch_taken_flag) begin
+    else if (wrong_prediction_flag) begin
         program_counter <= branch_pc;
         prev_pc <= program_counter;
     end
@@ -54,7 +47,7 @@ always @(negedge clk) begin
         prev_pc <= prev_pc;
     end
     else begin
-        program_counter <= program_counter + 4;
+        program_counter <= program_counter_prediction;
         prev_pc <= program_counter;
     end
 end
