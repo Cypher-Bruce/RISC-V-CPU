@@ -76,3 +76,4 @@
 /Pipeline_CPU.runs
 /Pipeline_CPU.sim
 *.xpr
+/Pipeline_CPU.hw

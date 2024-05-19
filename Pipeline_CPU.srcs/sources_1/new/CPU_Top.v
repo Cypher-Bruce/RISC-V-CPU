@@ -32,7 +32,10 @@ module CPU_Top(
     input  [23:0] switch,
     input  [4:0]  button,
     output [23:0] led,
-    output [31:0] seven_seg_tube
+    output [31:0] seven_seg_tube,
+    output [7:0]  minus_sign_flag,
+    output [7:0]  dot_flag,
+    output [7:0]  show_none_flag
 );
 
 ////////// Clock Signal //////////
@@ -428,7 +431,10 @@ IO_Device_Memory IO_Device_Memory_Instance(
     .button(button),
     .read_data(io_device_read_data),
     .led(led),
-    .seven_seg_tube(seven_seg_tube)
+    .seven_seg_tube(seven_seg_tube),
+    .minus_sign_flag(minus_sign_flag),
+    .dot_flag(dot_flag),
+    .show_none_flag(show_none_flag)
 );
 
 ////////// MEM/WB //////////

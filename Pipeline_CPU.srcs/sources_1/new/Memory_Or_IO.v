@@ -43,7 +43,7 @@ always @* begin
         case (funct3)
             3'b000: // load byte
             begin
-                case ({address[1], address[0]})   // looks strange right? change this to address[1:0] and the cpu fail to work, don't know why yet
+                case ({address[1], address[0]})   // looks strange right? change this to address[1:0] and the lb command fail to work, don't know why yet
                     2'b00: read_data = {{24{raw_read_data[7]}}, raw_read_data[7:0]};
                     2'b01: read_data = {{24{raw_read_data[15]}}, raw_read_data[15:8]};
                     2'b10: read_data = {{24{raw_read_data[23]}}, raw_read_data[23:16]};

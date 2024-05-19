@@ -23,7 +23,7 @@ Top Top_Instance(
 initial begin
     raw_clk = 0;
     rst = 1;
-    switch = 24'hFFFFFF;
+    switch = 24'h123456;
     forever #5 raw_clk = ~raw_clk;
 end
 

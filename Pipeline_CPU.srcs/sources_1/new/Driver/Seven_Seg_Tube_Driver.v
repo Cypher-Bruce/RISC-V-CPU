@@ -5,8 +5,11 @@ module Seven_Seg_Tube_Driver(
     input             raw_clk,
     input             rst,
     input      [31:0] data,
+    input      [7:0]  minus_sign_flag,
+    input      [7:0]  dot_flag,
+    input      [7:0]  show_none_flag,
     output     [7:0]  tube_select_onehot,
-    output     [7:0]  tube_shape
+    output reg [7:0]  tube_shape
 );
 
 // raw_clk: 100MHz
@@ -73,6 +76,16 @@ module Seven_Seg_Tube_Driver(
     assign digits[6] = data[27:24];
     assign digits[7] = data[31:28];
 
-    assign tube_shape = ~{1'b0, pre_defined_shape[digits[tube_select]]};  // inverted for active low
+    always @* begin
+        if (show_none_flag[tube_select]) begin
+            tube_shape = ~`NULL_SHAPE;
+        end
+        else if (minus_sign_flag[tube_select]) begin
+            tube_shape = ~`MINUS_SIGN_SHAPE;
+        end
+        else begin
+            tube_shape = ~{dot_flag[tube_select], pre_defined_shape[digits[tube_select]]};
+        end
+    end
 
 endmodule

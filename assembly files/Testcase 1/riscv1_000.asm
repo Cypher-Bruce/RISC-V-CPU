@@ -1,18 +1,28 @@
-#test case 1-0
+# test case 1-0
+# input two 8-bit number a and b through switch and display their value in seven seg tube
 .data 
-   led:    .half 0xFFC0  
-   switch: .half 0xFFC4
-   tube: .half 0xCFCC
-   memory: .half 0xCCCC
+	switch: .word 0x11fc0
+	button: .word 0x11fc4
+	led: .word 0x11fc8
+	seven_seg_tube: .word 0x11fcc
+	minus_sign_flag: .word 0x11fd0
+	dot_flag: .word 0x11fd4
+	show_non_flag: .word 0x11fd8
    
 .text
-lh t0, switch #t0 :address of switch
-lh t1, led # t1: address of led
-lh t2, tube # t2: address of tube segment 数码管地址
-lh t3, memory # t3: address of memory
+lw t0, switch
+lw t1, led
+lw t2, seven_seg_tube
 
-lbu a1, 2(t0) # 读取led[23:16]到a1, 即是8bit的a
-lbu a2, 0(t0) # 读取led[7:0]到a2, 即是8bit的b
-slli a1, a1, 16
-add a1, a1, a2
-sw a1, 0(t1) # 写到led中，a在左，b在右，中间空了8格
+lw a0, (t0)
+lb a1, 1(t0)
+lb a2, 2(t0)
+
+li a3, 0x0000FFFF
+and a1, a1, a3
+and a2, a2, a3
+slli a2, a2, 16
+or a4, a1, a2
+
+sw a4, (t2)
+sw a0, (t1)

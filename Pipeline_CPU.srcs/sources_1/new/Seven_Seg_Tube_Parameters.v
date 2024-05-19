@@ -17,6 +17,9 @@
 `define DIGIT_SHAPE_D 7'b1011110
 `define DIGIT_SHAPE_E 7'b1111001
 `define DIGIT_SHAPE_F 7'b1110001
+`define MINUS_SIGN_SHAPE 8'b01000000
+`define NULL_SHAPE 8'b00000000
+
 
 // Clock Divider
 `define half_period 50000 // if you wish to debug, set it to 2
