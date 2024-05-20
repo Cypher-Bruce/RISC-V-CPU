@@ -3,11 +3,13 @@
 .data 
 	switch: .word 0x11fc0
 	button: .word 0x11fc4
-	led: .word 0x11fc8
-	seven_seg_tube: .word 0x11fcc
-	minus_sign_flag: .word 0x11fd0
-	dot_flag: .word 0x11fd4
-	show_non_flag: .word 0x11fd8
+	push_flag: .word 0x11fc8
+	release_flag: .word 0x11fcc
+	led: .word 0x11fe0
+	seven_seg_tube: .word 0x11fe4
+	minus_sign_flag: .word 0x11fe8
+	dot_flag: .word 0x11fec
+	show_non_flag: .word 0x11ff0
    
 .text
 lw t0, switch
@@ -15,8 +17,8 @@ lw t1, led
 lw t2, seven_seg_tube
 
 lw a0, (t0)
-lb a1, 1(t0)
-lb a2, 2(t0)
+lb a1, 0(t0)
+lb a2, 1(t0)
 
 li a3, 0x0000FFFF
 and a1, a1, a3

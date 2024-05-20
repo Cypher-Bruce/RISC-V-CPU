@@ -19,9 +19,6 @@ module Seven_Seg_Tube_Driver(
 
     reg [31:0] clock_divider_counter;
     reg clk;
-    wire [3:0] digits [0:7];
-    wire [6:0] pre_defined_shape [0:15];
-    reg [2:0] tube_select;
 
     always @(posedge raw_clk or posedge rst) begin
         if (rst) begin
@@ -29,7 +26,7 @@ module Seven_Seg_Tube_Driver(
             clk <= 1'b0;
         end
         else begin
-            if (clock_divider_counter == `half_period - 1) begin
+            if (clock_divider_counter == `SEVEN_SEG_TUBE_HALF_PERIOD - 1) begin
                 clock_divider_counter <= 32'b0;
                 clk <= ~clk;
             end
@@ -38,6 +35,10 @@ module Seven_Seg_Tube_Driver(
             end
         end
     end
+
+    reg [2:0] tube_select;
+    wire [6:0] pre_defined_shape [0:15];
+    wire [3:0] digits [0:7];
 
     always @(posedge clk or posedge rst) begin
         if (rst) begin

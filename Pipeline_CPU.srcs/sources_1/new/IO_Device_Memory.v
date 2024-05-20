@@ -8,7 +8,9 @@ module IO_Device_Memory(
     input              read_flag,
     input              write_flag,
     input      [23:0]  switch,
-    input      [4:0]   button,
+    input      [4:0]   debounced_button,
+    input      [4:0]   push_button_flag,
+    input      [4:0]   release_button_flag,
 
     output reg [31:0]  read_data,
     output reg [23:0]  led,
@@ -95,7 +97,9 @@ end
 always @* begin
     case (truncate_address)
         `switch_initial_address: read_data = {8'h0, switch};
-        `button_initial_address: read_data = {27'h0, button};
+        `debounced_button_initial_address: read_data = {27'h0, debounced_button};
+        `push_button_flag_initial_address: read_data = {27'h0, push_button_flag};
+        `release_button_flag_initial_address: read_data = {27'h0, release_button_flag};
         default: read_data = 32'h00000000;
     endcase
 end

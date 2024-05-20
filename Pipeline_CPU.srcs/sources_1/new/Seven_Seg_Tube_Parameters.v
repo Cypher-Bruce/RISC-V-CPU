@@ -22,4 +22,4 @@
 
 
 // Clock Divider
-`define half_period 50000 // if you wish to debug, set it to 2
+`define SEVEN_SEG_TUBE_HALF_PERIOD 50000  // if you wish to debug, set it to 2

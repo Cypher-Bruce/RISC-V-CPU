@@ -14,12 +14,33 @@ wire [31:0] seven_seg_tube;
 wire [7:0]  minus_sign_flag;
 wire [7:0]  dot_flag;
 wire [7:0]  show_none_flag;
+wire clk;  // 23MHz clock signal
+
+CPU_Main_Clock_ip CPU_Main_Clock_ip_Instance(
+    .clk_in1(raw_clk),
+    .clk_out1(clk)
+);
+
+wire [4:0] debounced_button;
+wire [4:0] push_button_flag;
+wire [4:0] release_button_flag;
+
+Debouncer Debouncer_Instance(
+    .cpu_clk(clk),
+    .rst(rst),
+    .button(button),
+    .debounced_button(debounced_button),
+    .push_button_flag(push_button_flag),
+    .release_button_flag(release_button_flag)
+);
 
 CPU_Top CPU_Top_Instance(
-    .raw_clk(raw_clk),
+    .clk(clk),
     .rst(rst),
     .switch(switch),
-    .button(button),
+    .debounced_button(debounced_button),
+    .push_button_flag(push_button_flag),
+    .release_button_flag(release_button_flag),
     .led(led),
     .seven_seg_tube(seven_seg_tube),
     .minus_sign_flag(minus_sign_flag),

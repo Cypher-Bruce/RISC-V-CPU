@@ -27,24 +27,17 @@
 ///             data_memory_data: 32-bit data from data memory
 
 module CPU_Top(
-    input         raw_clk,
+    input         clk,
     input         rst,        // effect of rst: clear all the registers, set PC to 0, active high
     input  [23:0] switch,
-    input  [4:0]  button,
+    input  [4:0]  debounced_button,
+    input  [4:0]  push_button_flag,
+    input  [4:0]  release_button_flag,
     output [23:0] led,
     output [31:0] seven_seg_tube,
     output [7:0]  minus_sign_flag,
     output [7:0]  dot_flag,
     output [7:0]  show_none_flag
-);
-
-////////// Clock Signal //////////
-
-wire clk;  // 23MHz clock signal
-
-CPU_Main_Clock_ip CPU_Main_Clock_ip_Instance(
-    .clk_in1(raw_clk),
-    .clk_out1(clk)
 );
 
 ////////// Instruction Fetch //////////
@@ -428,7 +421,9 @@ IO_Device_Memory IO_Device_Memory_Instance(
     .read_flag(io_device_read_flag),
     .write_flag(io_device_write_flag),
     .switch(switch),
-    .button(button),
+    .debounced_button(debounced_button),
+    .push_button_flag(push_button_flag),
+    .release_button_flag(release_button_flag),
     .read_data(io_device_read_data),
     .led(led),
     .seven_seg_tube(seven_seg_tube),

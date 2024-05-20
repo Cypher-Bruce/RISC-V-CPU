@@ -1,13 +1,15 @@
-# test case 1-0
+# test case 1-1
 # input an 8-bit integer a and store it in a6
 .data 
 	switch: .word 0x11fc0
 	button: .word 0x11fc4
-	led: .word 0x11fc8
-	seven_seg_tube: .word 0x11fcc
-	minus_sign_flag: .word 0x11fd0
-	dot_flag: .word 0x11fd4
-	show_non_flag: .word 0x11fd8
+	push_flag: .word 0x11fc8
+	release_flag: .word 0x11fcc
+	led: .word 0x11fe0
+	seven_seg_tube: .word 0x11fe4
+	minus_sign_flag: .word 0x11fe8
+	dot_flag: .word 0x11fec
+	show_non_flag: .word 0x11ff0
    
 .text
 lw t0, switch
@@ -16,7 +18,7 @@ lw t2, seven_seg_tube
 lw t3, minus_sign_flag
 lw t4, dot_flag
 lw t5, show_non_flag
-lw t6, button
+lw t6, push_flag
 
 lw a0, (t0)
 lb a1, 1(t0)
