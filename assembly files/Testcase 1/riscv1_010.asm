@@ -20,10 +20,6 @@ lw t4, dot_flag
 lw t5, show_non_flag
 lw t6, push_flag
 
-lw a0, (t0)
-lb a1, 1(t0)
-lb a2, 2(t0)
-
 li a3, 0x000000A0
 sw a3, (t3)
 

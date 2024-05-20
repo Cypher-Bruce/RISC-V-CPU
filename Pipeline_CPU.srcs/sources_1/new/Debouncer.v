@@ -6,8 +6,8 @@ module Debouncer(
     input rst,
     input [4:0] button,
     output     [4:0] debounced_button,
-    output reg [4:0] push_button_flag,
-    output reg [4:0] release_button_flag
+    output     [4:0] push_button_flag,
+    output     [4:0] release_button_flag
 );
 
 reg [31:0] clock_divider_counter;
@@ -43,20 +43,7 @@ always @(posedge clk or posedge rst) begin
     end
 end
 
-// to be noted: we want to make sure the two flags
-// are only 1 cpu_clk wide, so the assignment should
-// be done in a cpu_clk synchronous way
-
 assign debounced_button = button_current & button_previous;
-
-always @(posedge cpu_clk or posedge rst) begin
-    if (rst) begin
-        push_button_flag <= 5'b00000;
-        release_button_flag <= 5'b00000;
-    end
-    else begin
-        push_button_flag <= (button_current & ~button_previous);
-        release_button_flag <= (~button_current & button_previous);
-    end
-end
+assign push_button_flag = button_current & ~button_previous;
+assign release_button_flag = ~button_current & button_previous;
 endmodule

@@ -15,16 +15,27 @@
 lw t0, switch
 lw t1, led
 lw t2, seven_seg_tube
+lw t3, minus_sign_flag
+lw t4, dot_flag
+lw t5, show_non_flag
+lw t6, push_flag
 
 lw a0, (t0)
+sw a0, (t1)
+
 lb a1, 0(t0)
 lb a2, 1(t0)
 
-li a3, 0x0000FFFF
+li a3, 0x000000FF
 and a1, a1, a3
 and a2, a2, a3
 slli a2, a2, 16
 or a4, a1, a2
 
+li a3, 0xA000B000
+add a4, a4, a3
+
+li a3, 0x00000044
+sw a3, (t5)
+
 sw a4, (t2)
-sw a0, (t1)

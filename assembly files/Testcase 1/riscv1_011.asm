@@ -1,32 +1,47 @@
-#场景1-011
+# test case 1-3
+# compare a and b with beq
+# if so then light up leds
 .data 
-   led:    .half 0xFFC0  
-   switch: .half 0xFFC4
-   tube: .half 0xCFCC
-   memory: .half 0xCCCC
-   
-.text
-lh t0, switch #t0 :address of switch
-lh t1, led # t1: address of led
-lh t2, tube # t2: address of tube segment 数码管地址
-lh t3, memory # t3: address of memory
-   
-.text
-lh t0, switch #t0 :address of switch
-lh t1, led # t1: address of led
-lh t2, tube # t2: address of tube segment 数码管地址
-lh t3, memory # t3: address of memory
+	switch: .word 0x11fc0
+	button: .word 0x11fc4
+	push_flag: .word 0x11fc8
+	release_flag: .word 0x11fcc
+	led: .word 0x11fe0
+	seven_seg_tube: .word 0x11fe4
+	minus_sign_flag: .word 0x11fe8
+	dot_flag: .word 0x11fec
+	show_non_flag: .word 0x11ff0
 
-	addi sp, sp, -8
-	lw a1, 0(sp) # 从用例001中（暂存在了sp-8）取出a存到寄存器a1
-	lw a2, 4(sp) # 从用例010中（暂存在了sp-4）取出b存到寄存器a2
-	addi sp, sp, 8 # 恢复stack pointer
-	beq a1, a2, lit
-	li a0，0
-	sw a0, 0(t1) # 把24位全0传进去，熄灭所有led灯
-	jal exit #关系不成立，什么都不做
-lit:
-	#led灯的基地址为t1
-	li a0, 0xffffff
-	sw a0, 0(t1) #把24位全1(0xffffff)传进去，点亮所有led灯
+.text
+lw t0, switch
+lw t1, led
+lw t2, seven_seg_tube
+lw t3, minus_sign_flag
+lw t4, dot_flag
+lw t5, show_non_flag
+lw t6, push_flag
+
+mv a1, a7
+mv a2, a6
+
+li a3, 0x000000FF
+and a1, a1, a3
+and a2, a2, a3
+slli a2, a2, 16
+or a4, a1, a2
+
+li a3, 0xA000B000
+add a4, a4, a3
+
+li a3, 0x00000044
+sw a3, (t5)
+
+sw a4, (t2)
+
+beq a6, a7, led_light_up
+sw zero, (t1)
+j exit
+led_light_up:
+li a3, 0x00FFFFFF
+sw a3, (t1)
 exit:
