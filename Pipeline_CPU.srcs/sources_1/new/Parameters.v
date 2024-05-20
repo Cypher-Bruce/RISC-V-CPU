@@ -22,3 +22,7 @@
 
 // Instruction
 `define nop 32'h00000013
+
+// Registers
+`define stack_pointer_initial_value 32'h00005ffc
+`define global_pointer_initial_value 32'h00003800

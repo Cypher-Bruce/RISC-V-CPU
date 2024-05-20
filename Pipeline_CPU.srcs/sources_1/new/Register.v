@@ -1,4 +1,5 @@
 `timescale 1ns / 1ps
+`include "Parameters.v"
 
 /// Module: Register
 /// Description: The register file is a collection of 32 registers, each of which is 32 bits wide.
@@ -30,8 +31,8 @@ module Register(
         if (rst) begin
             register[0]  <= 32'b0;
             register[1]  <= 32'b0;
-            register[2]  <= 32'b0;
-            register[3]  <= 32'b0;
+            register[2]  <= `stack_pointer_initial_value;
+            register[3]  <= `global_pointer_initial_value;
             register[4]  <= 32'b0;
             register[5]  <= 32'b0;
             register[6]  <= 32'b0;
