@@ -26,12 +26,21 @@ module Instruction_Fetch(
 );
 
 ////////////////////////// ADDRESS SHIFTING //////////////////////////
+/// !Note: in pipeline version CPU, the memory ip core is detached from instrctoin fectch, this module only deals with PC.
 /// We use memory layout like this: https://photos.app.goo.gl/8xTAXyCikpdyna5V9
 /// Because it's not possible to access various memory IP cores using absolute addresses in the address space,
 /// it's necessary to perform address offsetting when accessing IP core addresses: absolute address - offset within the address section.
 /// Therefore, when accessing instruction memory, no address adjustment is required,
 /// whereas when accessing data memory, the absolute address needs to be subtracted by 0x2000.
 
+
+////////////////////////// PROGRAM COUNTER //////////////////////////
+/// This module handles the updating of the program counter (PC).
+/// The PC is updated based on different conditions:
+/// 1. If it's a reset condition, the PC is initialized to the initial address of the instruction memory.
+/// 2. If a wrong prediction is detected, the PC is updated to the branch target address.
+/// 3. If a stall condition is detected, the PC remains unchanged.
+/// 4. Otherwise, the PC is updated to the predicted program counter value.
 
 always @(negedge clk) begin
     if (rst) begin

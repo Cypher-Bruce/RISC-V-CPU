@@ -1,17 +1,25 @@
 `timescale 1ns / 1ps
 
-module Register(
-    input clk,
-    input rst,
-    input reg_write_flag,
-    input [4:0] read_reg_idx_1,
-    input [4:0] read_reg_idx_2,
-    input [4:0] write_reg_idx,
-    input [31:0] write_data,
+/// Module: Register
+/// Description: The register file is a collection of 32 registers, each of which is 32 bits wide.
+/// Note: 
+///     - read instrction is simultaneous, write instruction executes on the FALLING edge of the clock
+///     - register 0 is always 0
+///     - input write_reg_idx and write_data are passed from EX/MEM pipeline register
 
-    output [31:0] read_data_1,
-    output [31:0] read_data_2
+module Register(
+    input                 clk,
+    input                 rst,
+    input                 reg_write_flag,
+    input          [4:0]  read_reg_idx_1,
+    input          [4:0]  read_reg_idx_2,
+    input          [4:0]  write_reg_idx,
+    input          [31:0] write_data,
+
+    output  reg    [31:0] read_data_1,
+    output  reg    [31:0] read_data_2
 );
+
 
     reg [31:0] register [0:31];
 

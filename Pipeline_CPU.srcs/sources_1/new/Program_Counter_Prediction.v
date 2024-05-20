@@ -1,10 +1,26 @@
 `timescale 1ns / 1ps
 
+/// Module: Program_Counter_Prediction
+/// Description: The mechanism of program counter prediction is as follows:
+///   - If the current program counter value is already in the LRU cache, it means
+///     that a similar branch instruction has been executed before and the
+///     corresponding branch target address has been recorded in the cache.
+///     Therefore, program prediction assumes that the current branch instruction
+///     will be executed repeatedly, and the next program counter value is predicted
+///     to be the corresponding branch target address in the cache.
+///   - If the current program counter value is not in the LRU cache, this means
+///     that there was no previous similar branching instruction or the cache has
+///     been invalidated to provide a reliable prediction. In this case, the program
+///     prediction will simply set the next program counter value to the current
+///     program counter value plus the instruction width. This is a conservative
+///     assumption that assumes the program will execute the next instruction
+///     sequentially.
+
 module Program_Counter_Prediction(
     input             clk,
     input             rst,
-    input      [31:0] branch_from_pc,
-    input      [31:0] branch_to_pc,
+    input      [31:0] branch_from_pc,               // where the branch instruction is
+    input      [31:0] branch_to_pc,                 // where the branch instruction will go
     input      [31:0] program_counter,
     input             branch_flag,
     
