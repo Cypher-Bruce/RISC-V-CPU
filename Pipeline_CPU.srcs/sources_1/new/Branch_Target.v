@@ -20,6 +20,7 @@ module Branch_Target(
 // 0: pc = pc + 4, 1: pc = branch_pc
 // unconditional branch: jal, jalr
 // conditional branch: beq, bne, blt, bge, bltu, bgeu
+
 wire [2:0] funct3;
 reg branch_taken_flag;
 assign funct3 = inst[14:12];

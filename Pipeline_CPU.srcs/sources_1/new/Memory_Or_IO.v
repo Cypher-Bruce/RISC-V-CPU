@@ -1,6 +1,11 @@
 `timescale 1ns / 1ps
 `include "Parameters.v"
 
+/// Module: Memory_Or_IO
+/// Description: The Memory_Or_IO module is a multiplexer that selects between memory and I/O device for data read/write.
+///              it serves as a memory controller and interface for handling read operations from both memory and I/O devices.
+///              major functions: address translation, data source selection, data read/write, data sign extension
+
 module Memory_Or_IO(
     input       [31:0]  address_absolute,         // 14-bit address bus, from ALU
     input       [31:0]  inst,                     // instruction from inst memory (to determine output byte/half/word)

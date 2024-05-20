@@ -26,6 +26,9 @@
 ///             ALU_result: 32-bit result from ALU
 ///             data_memory_data: 32-bit data from data memory
 
+
+/// TODO: add uart to pipeline CPU
+
 module CPU_Top(
     input         clk,
     input         rst,        // effect of rst: clear all the registers, set PC to 0, active high
@@ -34,22 +37,23 @@ module CPU_Top(
     input  [4:0]  push_button_flag,
     input  [4:0]  release_button_flag,
     output [23:0] led,
-    output [31:0] seven_seg_tube,
-    output [7:0]  minus_sign_flag,
-    output [7:0]  dot_flag,
-    output [7:0]  show_none_flag
+    output [31:0] seven_seg_tube,   // segment
+    output [7:0]  minus_sign_flag,  // segment 
+    output [7:0]  dot_flag,         // segment
+    output [7:0]  show_none_flag    // segment
 );
 
 ////////// Instruction Fetch //////////
 
 ///// Instruction Fetch Module /////
+/// Program counter and its logic
 
-wire wrong_prediction_flag;
-wire [31:0] branch_pc;
-wire stall_flag;
-wire [31:0] program_counter_prediction_IF;
-wire [31:0] program_counter_raw;
-wire [31:0] prev_pc;
+wire               wrong_prediction_flag;           // if branch wrong, then
+wire  [31:0]       branch_pc;                       // for branch inst, if condition correct, the pc supposed to be
+wire               stall_flag;                      // indicate a stall is needed: load-use, dependency
+wire  [31:0]       program_counter_prediction_IF;   // the predicted program counter, special if there is a branch
+wire  [31:0]       program_counter_raw;             // instruction address of the current cycle
+wire  [31:0]       prev_pc;                         // keep record of the inst address of this cycle
 
 Instruction_Fetch Instruction_Fetch_Instance(
     .clk(clk),
@@ -81,9 +85,9 @@ Instruction_Memory Instruction_Memory_Instance(
 
 ///// Program Counter Prediction /////
 
-wire branch_flag_MEM;
-wire [31:0] program_counter_MEM;
-wire [31:0] prev_pcp;
+wire              branch_flag_MEM;   
+wire  [31:0]      program_counter_MEM;
+wire  [31:0]      prev_pcp;
 
 Program_Counter_Prediction Program_Counter_Prediction_Instance(
     .clk(clk),
@@ -97,6 +101,8 @@ Program_Counter_Prediction Program_Counter_Prediction_Instance(
 );
 
 ////////// IF/ID //////////
+/// pipline register
+/// For pipeline reg, the suffix(eg: _IF) means the stage of the data it belongs to.
 
 wire [31:0] inst_ID;
 wire [31:0] program_counter_ID;
@@ -119,17 +125,17 @@ IF_ID IF_ID_Instance(
 
 ///// Controller /////
 
-wire branch_flag_ID;
-wire [1:0] ALU_operation_ID;
-wire ALU_src_flag_ID;
-wire mem_read_flag_ID;
-wire mem_write_flag_ID;
-wire mem_to_reg_flag_ID;
-wire reg_write_flag_ID;
-wire jal_flag_ID;
-wire jalr_flag_ID;
-wire lui_flag_ID;
-wire auipc_flag_ID;
+wire               branch_flag_ID;
+wire  [1:0]        ALU_operation_ID;
+wire               ALU_src_flag_ID;
+wire               mem_read_flag_ID;
+wire               mem_write_flag_ID;
+wire               mem_to_reg_flag_ID;
+wire               reg_write_flag_ID;
+wire               jal_flag_ID;
+wire               jalr_flag_ID;
+wire               lui_flag_ID;
+wire               auipc_flag_ID;
 
 Controller Controller_Instance(
     .inst(inst_ID),
@@ -156,6 +162,7 @@ Immediate_Generator Immediate_Generator_Instance(
 );
 
 ///// Decoder /////
+/// Decode the register index
 
 wire [4:0] read_reg_idx_1_ID;
 wire [4:0] read_reg_idx_2_ID;
@@ -170,8 +177,8 @@ Decoder Decoder_Instance(
 
 ///// Register /////
 
-wire reg_write_flag_WB;
-wire [4:0] write_reg_idx_WB;
+wire        reg_write_flag_WB;
+wire [4:0]  write_reg_idx_WB;
 wire [31:0] write_back_data;
 wire [31:0] read_data_1_ID;
 wire [31:0] read_data_2_ID;
@@ -190,26 +197,26 @@ Register Register_Instance(
 
 ////////// ID/EX //////////
 
-wire branch_flag_EX;
-wire [1:0] ALU_operation_EX;
-wire ALU_src_flag_EX;
-wire mem_read_flag_EX;
-wire mem_write_flag_EX;
-wire mem_to_reg_flag_EX;
-wire reg_write_flag_EX;
-wire jal_flag_EX;
-wire jalr_flag_EX;
-wire lui_flag_EX;
-wire auipc_flag_EX;
-wire [31:0] imme_EX;
-wire [31:0] read_data_1_before_forward_EX;
-wire [31:0] read_data_2_before_forward_EX;
-wire [4:0] read_reg_idx_1_EX;
-wire [4:0] read_reg_idx_2_EX;
-wire [4:0] write_reg_idx_EX;
-wire [31:0] inst_EX;
-wire [31:0] program_counter_EX;
-wire [31:0] program_counter_prediction_EX;
+wire                  branch_flag_EX;
+wire  [1:0]           ALU_operation_EX;
+wire                  ALU_src_flag_EX;
+wire                  mem_read_flag_EX;
+wire                  mem_write_flag_EX;
+wire                  mem_to_reg_flag_EX;
+wire                  reg_write_flag_EX;
+wire                  jal_flag_EX;
+wire                  jalr_flag_EX;
+wire                  lui_flag_EX;
+wire                  auipc_flag_EX;
+wire  [31:0]          imme_EX;
+wire  [31:0]          read_data_1_before_forward_EX;
+wire  [31:0]          read_data_2_before_forward_EX;
+wire  [4:0]           read_reg_idx_1_EX;
+wire  [4:0]           read_reg_idx_2_EX;
+wire  [4:0]           write_reg_idx_EX;
+wire  [31:0]          inst_EX;
+wire  [31:0]          program_counter_EX;
+wire  [31:0]          program_counter_prediction_EX;
 
 ID_EX ID_EX_Instance(
     .clk(clk),
@@ -236,6 +243,7 @@ ID_EX ID_EX_Instance(
     .inst_ID(inst_ID),
     .program_counter_ID(program_counter_ID),
     .program_counter_prediction_ID(program_counter_prediction_ID),
+
     .branch_flag_EX(branch_flag_EX),
     .ALU_operation_EX(ALU_operation_EX),
     .ALU_src_flag_EX(ALU_src_flag_EX),
@@ -262,12 +270,12 @@ ID_EX ID_EX_Instance(
 
 ///// Forwarding Mux /////
 
-wire [31:0] read_data_1_forwarding;
-wire [31:0] read_data_2_forwarding;
-wire read_data_1_forwarding_flag;
-wire read_data_2_forwarding_flag;
-wire [31:0] read_data_1_after_forward_EX;
-wire [31:0] read_data_2_after_forward_EX;
+wire  [31:0]          read_data_1_forwarding;
+wire  [31:0]          read_data_2_forwarding;
+wire                  read_data_1_forwarding_flag;
+wire                  read_data_2_forwarding_flag;
+wire  [31:0]          read_data_1_after_forward_EX;
+wire  [31:0]          read_data_2_after_forward_EX;
 
 Forwarding_Mux Forwarding_Mux_Instance(
     .read_data_1_raw(read_data_1_before_forward_EX),
@@ -276,6 +284,7 @@ Forwarding_Mux Forwarding_Mux_Instance(
     .read_data_2_forwarding(read_data_2_forwarding),
     .read_data_1_forwarding_flag(read_data_1_forwarding_flag),
     .read_data_2_forwarding_flag(read_data_2_forwarding_flag),
+
     .read_data_1(read_data_1_after_forward_EX),
     .read_data_2(read_data_2_after_forward_EX)
 );
@@ -283,7 +292,7 @@ Forwarding_Mux Forwarding_Mux_Instance(
 ///// ALU /////
 
 wire [31:0] ALU_result_EX;
-wire zero_flag_EX;
+wire        zero_flag_EX;
 
 ALU ALU_Instance(
     .read_data_1(read_data_1_after_forward_EX),
@@ -297,28 +306,29 @@ ALU ALU_Instance(
     .jalr_flag(jalr_flag_EX),
     .lui_flag(lui_flag_EX),
     .auipc_flag(auipc_flag_EX),
+
     .ALU_result(ALU_result_EX),
     .zero_flag(zero_flag_EX)
 );
 
 ////////// EX/MEM //////////
 
-wire [31:0] ALU_result_MEM;
-wire zero_flag_MEM;
-// wire branch_flag_MEM;
-wire mem_read_flag_MEM;
-wire mem_write_flag_MEM;
-wire mem_to_reg_flag_MEM;
-wire reg_write_flag_MEM;
-wire jal_flag_MEM;
-wire jalr_flag_MEM;
-wire [31:0] imme_MEM;
-wire [31:0] read_data_1_MEM;
-wire [31:0] read_data_2_MEM;
-wire [4:0] write_reg_idx_MEM;
-wire [31:0] inst_MEM;
-// wire [31:0] program_counter_MEM;
-wire [31:0] program_counter_prediction_MEM;
+wire  [31:0]          ALU_result_MEM;
+wire                  zero_flag_MEM;
+// wire                  branch_flag_MEM;
+wire                  mem_read_flag_MEM;
+wire                  mem_write_flag_MEM;
+wire                  mem_to_reg_flag_MEM;
+wire                  reg_write_flag_MEM;
+wire                  jal_flag_MEM;
+wire                  jalr_flag_MEM;
+wire  [31:0]          imme_MEM;
+wire  [31:0]          read_data_1_MEM;
+wire  [31:0]          read_data_2_MEM;
+wire  [4:0]           write_reg_idx_MEM;
+wire  [31:0]          inst_MEM;
+// wire  [31:0]         program_counter_MEM;
+wire  [31:0]          program_counter_prediction_MEM;   
 
 EX_MEM EX_MEM_Instance(
     .clk(clk),
@@ -340,6 +350,7 @@ EX_MEM EX_MEM_Instance(
     .inst_EX(inst_EX),
     .program_counter_EX(program_counter_EX),
     .program_counter_prediction_EX(program_counter_prediction_EX),
+    
     .ALU_result_MEM(ALU_result_MEM),
     .zero_flag_MEM(zero_flag_MEM),
     .branch_flag_MEM(branch_flag_MEM),
@@ -381,10 +392,10 @@ Branch_Target Branch_Target_Instance(
 wire [31:0] data_memory_read_data;
 wire [31:0] io_device_read_data;
 wire [31:0] read_data_MEM;
-wire data_memory_read_flag;
-wire data_memory_write_flag;
-wire io_device_read_flag;
-wire io_device_write_flag;
+wire        data_memory_read_flag;
+wire        data_memory_write_flag;
+wire        io_device_read_flag;
+wire        io_device_write_flag;
 
 Memory_Or_IO Memory_Or_IO_Instance(
     .address_absolute(ALU_result_MEM),
@@ -436,14 +447,14 @@ IO_Device_Memory IO_Device_Memory_Instance(
 
 wire [31:0] read_data_WB;
 wire [31:0] ALU_result_WB;
-wire mem_to_reg_flag_WB;
-// wire reg_write_flag_WB;  // defined at register stage
-wire jal_flag_WB;
-wire jalr_flag_WB;
-wire lui_flag_WB;
-wire auipc_flag_WB;
+wire        mem_to_reg_flag_WB;
+// wire   reg_write_flag_WB;   // defined at register stage
+wire        jal_flag_WB;
+wire        jalr_flag_WB;
+wire        lui_flag_WB;
+wire        auipc_flag_WB;
 wire [31:0] imme_WB;
-// wire [4:0] write_reg_idx_WB;  // defined at register stage
+// wire   [4:0] write_reg_idx_WB;   // defined at register stage
 wire [31:0] program_counter_WB;
 
 MEM_WB MEM_WB_Instance(
@@ -495,4 +506,8 @@ Hazard_Detection_Unit Hazard_Detection_Unit_Instance(
     .read_reg_idx_2_ID(read_reg_idx_2_ID),
     .stall_flag(stall_flag)
 );
+
+/////////////////// UART //////////////////
+// todo: transplant from single-cycle to pipeline CPU
+
 endmodule

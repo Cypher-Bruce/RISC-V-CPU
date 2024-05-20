@@ -1,5 +1,10 @@
 `timescale 1ns / 1ps
 
+/// Module: IO_Device_Memory
+/// Description: The IO_Device_Memory module acts as a memory controller for I/O devices. 
+///              It manages read and write operations to memory-mapped registers and peripherals, 
+///              and it handles input from switches and buttons.
+
 module IO_Device_Memory(
     input              clk,
     input              rst,
