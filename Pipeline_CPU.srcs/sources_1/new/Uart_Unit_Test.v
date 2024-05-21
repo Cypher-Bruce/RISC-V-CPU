@@ -1,6 +1,26 @@
 `timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 2024/05/21 17:22:44
+// Design Name: 
+// Module Name: Uart_Unit_Test
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
 
-module Top(
+
+module Uart_Unit_Test(
     input             raw_clk,
     input             raw_rst,
     input  [23:0]     switch,
@@ -78,37 +98,18 @@ uart_bmpg_0 uart_Instance(
     .upg_tx_o(tx)
 );
 
-////////// CPU //////////
 
-CPU_Top CPU_Top_Instance(
+Instruction_Memory Instruction_Memory_Instance(
     .clk(cpu_clk),
-    .rst(rst),
-    .switch(switch),
-    .debounced_button(debounced_button),
-    .push_button_flag(push_button_flag),
-    .release_button_flag(release_button_flag),
-    .led(led),
-    .seven_seg_tube(seven_seg_tube),
-    .minus_sign_flag(minus_sign_flag),
-    .dot_flag(dot_flag),
-    .show_none_flag(show_none_flag),
+    .program_counter(24'h000000),
+    .inst(seven_seg_tube),
     .kick_off_flag(kick_off_flag),
-    .uart_clk(uart_clk_out),
-    .upg_wen(upg_wen),
-    .upg_adr(upg_adr),
+    .upg_clk(uart_clk_out),
+    .upg_wen(upg_wen & (!upg_adr[14])),
+    .upg_adr(upg_adr[13:0]),
     .upg_dat(upg_dat)
 );
 
-////////// Seven Segment Tube Driver //////////
+assign led = seven_seg_tube[23:0];
 
-Seven_Seg_Tube_Driver Seven_Seg_Tube_Driver_Instance(
-    .raw_clk(raw_clk),
-    .rst(rst),
-    .data(seven_seg_tube),
-    .minus_sign_flag(minus_sign_flag),
-    .dot_flag(dot_flag),
-    .show_none_flag(show_none_flag),
-    .tube_select_onehot(tube_select_onehot),
-    .tube_shape(tube_shape)
-);
 endmodule

@@ -2,7 +2,7 @@
 `include "Debouncer_Parameters.v"
 
 module Debouncer(
-    input cpu_clk,
+    input raw_clk,
     input rst,
     input [4:0] button,
     output     [4:0] debounced_button,
@@ -13,7 +13,7 @@ module Debouncer(
 reg [31:0] clock_divider_counter;
 reg clk;
 
-always @(posedge cpu_clk or posedge rst) begin
+always @(posedge raw_clk or posedge rst) begin
     if (rst) begin
         clock_divider_counter <= 32'b0;
         clk <= 1'b0;

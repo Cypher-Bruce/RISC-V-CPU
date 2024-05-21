@@ -1,7 +1,4 @@
-
-// file: CPU_Main_Clock_ip.v
-// 
-// (c) Copyright 2008 - 2013 Xilinx, Inc. All rights reserved.
+// (c) Copyright 1995-2024 Xilinx, Inc. All rights reserved.
 // 
 // This file contains confidential and proprietary information
 // of Xilinx, Inc. and is protected under U.S. and
@@ -47,43 +44,46 @@
 // THIS COPYRIGHT NOTICE AND DISCLAIMER MUST BE RETAINED AS
 // PART OF THIS FILE AT ALL TIMES.
 // 
-//----------------------------------------------------------------------------
-// User entered comments
-//----------------------------------------------------------------------------
-// None
-//
-//----------------------------------------------------------------------------
-//  Output     Output      Phase    Duty Cycle   Pk-to-Pk     Phase
-//   Clock     Freq (MHz)  (degrees)    (%)     Jitter (ps)  Error (ps)
-//----------------------------------------------------------------------------
-// clk_out1____23.000______0.000______50.0______342.117____303.235
-// clk_out2____10.000______0.000______50.0______391.228____303.235
-//
-//----------------------------------------------------------------------------
-// Input Clock   Freq (MHz)    Input Jitter (UI)
-//----------------------------------------------------------------------------
-// __primary_________100.000____________0.010
+// DO NOT MODIFY THIS FILE.
 
-`timescale 1ps/1ps
 
-(* CORE_GENERATION_INFO = "CPU_Main_Clock_ip,clk_wiz_v5_4_3_0,{component_name=CPU_Main_Clock_ip,use_phase_alignment=true,use_min_o_jitter=false,use_max_i_jitter=false,use_dyn_phase_shift=false,use_inclk_switchover=false,use_dyn_reconfig=false,enable_axi=0,feedback_source=FDBK_AUTO,PRIMITIVE=PLL,num_out_clk=2,clkin1_period=10.000,clkin2_period=10.000,use_power_down=false,use_reset=false,use_locked=false,use_inclk_stopped=false,feedback_type=SINGLE,CLOCK_MGR_TYPE=NA,manual_override=false}" *)
+// IP VLNV: SEU_CSE_507:user:uart_bmpg:1.3
+// IP Revision: 8
 
-module CPU_Main_Clock_ip 
- (
-  // Clock out ports
-  output        clk_out1,
-  output        clk_out2,
- // Clock in ports
-  input         clk_in1
- );
+(* X_CORE_INFO = "upg,Vivado 2017.4" *)
+(* CHECK_LICENSE_TYPE = "uart_bmpg_0,upg,{}" *)
+(* DowngradeIPIdentifiedWarnings = "yes" *)
+module uart_bmpg_0 (
+  upg_clk_i,
+  upg_rst_i,
+  upg_clk_o,
+  upg_wen_o,
+  upg_adr_o,
+  upg_dat_o,
+  upg_done_o,
+  upg_rx_i,
+  upg_tx_o
+);
 
-  CPU_Main_Clock_ip_clk_wiz inst
-  (
-  // Clock out ports  
-  .clk_out1(clk_out1),
-  .clk_out2(clk_out2),
- // Clock in ports
-  .clk_in1(clk_in1)
+input wire upg_clk_i;
+input wire upg_rst_i;
+output wire upg_clk_o;
+output wire upg_wen_o;
+output wire [14 : 0] upg_adr_o;
+output wire [31 : 0] upg_dat_o;
+output wire upg_done_o;
+input wire upg_rx_i;
+output wire upg_tx_o;
+
+  upg inst (
+    .upg_clk_i(upg_clk_i),
+    .upg_rst_i(upg_rst_i),
+    .upg_clk_o(upg_clk_o),
+    .upg_wen_o(upg_wen_o),
+    .upg_adr_o(upg_adr_o),
+    .upg_dat_o(upg_dat_o),
+    .upg_done_o(upg_done_o),
+    .upg_rx_i(upg_rx_i),
+    .upg_tx_o(upg_tx_o)
   );
-
 endmodule

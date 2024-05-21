@@ -75,5 +75,4 @@
 /Pipeline_CPU.ip_user_files
 /Pipeline_CPU.runs
 /Pipeline_CPU.sim
-*.xpr
 /Pipeline_CPU.hw

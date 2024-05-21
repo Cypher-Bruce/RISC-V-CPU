@@ -1,5 +1,5 @@
-#set_property -dict {IOSTANDARD LVCMOS33 PACKAGE_PIN Y19} [get_ports rx]
-#set_property -dict {IOSTANDARD LVCMOS33 PACKAGE_PIN V18} [get_ports tx]
+set_property -dict {IOSTANDARD LVCMOS33 PACKAGE_PIN Y19} [get_ports rx]
+set_property -dict {IOSTANDARD LVCMOS33 PACKAGE_PIN V18} [get_ports tx]
  
 set_property -dict {IOSTANDARD LVCMOS33 PACKAGE_PIN P2} [get_ports {button[4]}]
 set_property -dict {IOSTANDARD LVCMOS33 PACKAGE_PIN P4} [get_ports {button[3]}]
@@ -7,7 +7,7 @@ set_property -dict {IOSTANDARD LVCMOS33 PACKAGE_PIN P5} [get_ports {button[2]}]
 set_property -dict {IOSTANDARD LVCMOS33 PACKAGE_PIN P1} [get_ports {button[1]}]
 set_property -dict {IOSTANDARD LVCMOS33 PACKAGE_PIN R1} [get_ports {button[0]}]
 
-set_property -dict {IOSTANDARD LVCMOS33 PACKAGE_PIN P20} [get_ports rst]
+set_property -dict {IOSTANDARD LVCMOS33 PACKAGE_PIN P20} [get_ports raw_rst]
 set_property -dict {IOSTANDARD LVCMOS33 PACKAGE_PIN Y18} [get_ports raw_clk]
 
 set_property -dict {IOSTANDARD LVCMOS33 PACKAGE_PIN K17} [get_ports {led[23]}]

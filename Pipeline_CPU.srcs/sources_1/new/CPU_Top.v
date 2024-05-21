@@ -40,7 +40,13 @@ module CPU_Top(
     output [31:0] seven_seg_tube,   // segment
     output [7:0]  minus_sign_flag,  // segment 
     output [7:0]  dot_flag,         // segment
-    output [7:0]  show_none_flag    // segment
+    output [7:0]  show_none_flag,   // segment
+
+    input kick_off_flag,
+    input uart_clk,           // UPG ram_clk_i(10MHz)
+    input upg_wen,           // UPG write enable
+    input [14:0] upg_adr,    // UPG write address
+    input [31:0] upg_dat     // UPG write data
 );
 
 ////////// Instruction Fetch //////////
@@ -80,7 +86,12 @@ wire [31:0] inst_IF;
 Instruction_Memory Instruction_Memory_Instance(
     .clk(clk),
     .program_counter(program_counter_raw),
-    .inst(inst_IF)
+    .inst(inst_IF),
+    .kick_off_flag(kick_off_flag),
+    .uart_clk(uart_clk),
+    .upg_wen(upg_wen & (!upg_adr[14])),
+    .upg_adr(upg_adr[13:0]),
+    .upg_dat(upg_dat)
 );
 
 ///// Program Counter Prediction /////
@@ -162,7 +173,6 @@ Immediate_Generator Immediate_Generator_Instance(
 );
 
 ///// Decoder /////
-/// Decode the register index
 
 wire [4:0] read_reg_idx_1_ID;
 wire [4:0] read_reg_idx_2_ID;
@@ -419,7 +429,12 @@ Data_Memory Data_Memory_Instance(
     .write_data(read_data_2_MEM),
     .read_flag(data_memory_read_flag),
     .write_flag(data_memory_write_flag),
-    .read_data(data_memory_read_data)
+    .read_data(data_memory_read_data),
+    .kick_off_flag(kick_off_flag),
+    .uart_clk(uart_clk),
+    .upg_wen(upg_wen & upg_adr[14]),
+    .upg_adr(upg_adr[13:0]),
+    .upg_dat(upg_dat)
 );
 
 ///// IO Device Memory /////
@@ -506,8 +521,5 @@ Hazard_Detection_Unit Hazard_Detection_Unit_Instance(
     .read_reg_idx_2_ID(read_reg_idx_2_ID),
     .stall_flag(stall_flag)
 );
-
-/////////////////// UART //////////////////
-// todo: transplant from single-cycle to pipeline CPU
 
 endmodule
