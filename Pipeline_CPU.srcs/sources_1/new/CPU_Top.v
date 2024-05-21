@@ -432,7 +432,7 @@ Data_Memory Data_Memory_Instance(
     .read_data(data_memory_read_data),
     .kick_off_flag(kick_off_flag),
     .uart_clk(uart_clk),
-    .upg_wen(upg_wen & upg_adr[14]),
+    .upg_wen(upg_wen & upg_adr[14]),    
     .upg_adr(upg_adr[13:0]),
     .upg_dat(upg_dat)
 );
