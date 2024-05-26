@@ -3,8 +3,8 @@
 // Tool Version: Vivado v.2017.4 (win64) Build 2086221 Fri Dec 15 20:55:39 MST 2017
 // Date        : Sun May 26 12:39:34 2024
 // Host        : Cypher_Bruce running 64-bit major release  (build 9200)
-// Command     : write_verilog -force -mode funcsim {C:/Users/Cyphe/Documents/SUSTech Assignment/Term 4/Computer
-//               Organization/Project/Pipeline/Pipeline_CPU.srcs/sources_1/ip/Instruction_Memory_ip/Instruction_Memory_ip_sim_netlist.v}
+// Command     : write_verilog -force -mode funcsim -rename_top Instruction_Memory_ip -prefix
+//               Instruction_Memory_ip_ Instruction_Memory_ip_sim_netlist.v
 // Design      : Instruction_Memory_ip
 // Purpose     : This verilog netlist is a functional simulation representation of the design and should not be modified
 //               or synthesized. This netlist cannot be used for SDF annotated simulation.
@@ -192,7 +192,6 @@ module Instruction_Memory_ip
         .web(1'b0));
 endmodule
 
-(* ORIG_REF_NAME = "bindec" *) 
 module Instruction_Memory_ip_bindec
    (ena_array,
     addra);
@@ -216,7 +215,6 @@ module Instruction_Memory_ip_bindec
         .O(ena_array[1]));
 endmodule
 
-(* ORIG_REF_NAME = "blk_mem_gen_generic_cstr" *) 
 module Instruction_Memory_ip_blk_mem_gen_generic_cstr
    (douta,
     addra,
@@ -493,7 +491,6 @@ module Instruction_Memory_ip_blk_mem_gen_generic_cstr
         .wea(wea));
 endmodule
 
-(* ORIG_REF_NAME = "blk_mem_gen_mux" *) 
 module Instruction_Memory_ip_blk_mem_gen_mux
    (douta,
     addra,
@@ -867,7 +864,6 @@ module Instruction_Memory_ip_blk_mem_gen_mux
         .R(1'b0));
 endmodule
 
-(* ORIG_REF_NAME = "blk_mem_gen_prim_width" *) 
 module Instruction_Memory_ip_blk_mem_gen_prim_width
    (douta,
     clka,
@@ -1368,7 +1364,6 @@ module Instruction_Memory_ip_blk_mem_gen_prim_width__parameterized9
         .wea(wea));
 endmodule
 
-(* ORIG_REF_NAME = "blk_mem_gen_prim_wrapper_init" *) 
 module Instruction_Memory_ip_blk_mem_gen_prim_wrapper_init
    (douta,
     clka,
@@ -4975,7 +4970,6 @@ module Instruction_Memory_ip_blk_mem_gen_prim_wrapper_init__parameterized9
         .WEBWE({1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0,1'b0}));
 endmodule
 
-(* ORIG_REF_NAME = "blk_mem_gen_top" *) 
 module Instruction_Memory_ip_blk_mem_gen_top
    (douta,
     addra,
@@ -5026,7 +5020,7 @@ endmodule
 (* C_USE_URAM = "0" *) (* C_WEA_WIDTH = "1" *) (* C_WEB_WIDTH = "1" *) 
 (* C_WRITE_DEPTH_A = "16384" *) (* C_WRITE_DEPTH_B = "16384" *) (* C_WRITE_MODE_A = "WRITE_FIRST" *) 
 (* C_WRITE_MODE_B = "WRITE_FIRST" *) (* C_WRITE_WIDTH_A = "32" *) (* C_WRITE_WIDTH_B = "32" *) 
-(* C_XDEVICEFAMILY = "artix7" *) (* ORIG_REF_NAME = "blk_mem_gen_v8_4_1" *) (* downgradeipidentifiedwarnings = "yes" *) 
+(* C_XDEVICEFAMILY = "artix7" *) (* downgradeipidentifiedwarnings = "yes" *) 
 module Instruction_Memory_ip_blk_mem_gen_v8_4_1
    (clka,
     rsta,
@@ -5288,7 +5282,6 @@ module Instruction_Memory_ip_blk_mem_gen_v8_4_1
         .wea(wea));
 endmodule
 
-(* ORIG_REF_NAME = "blk_mem_gen_v8_4_1_synth" *) 
 module Instruction_Memory_ip_blk_mem_gen_v8_4_1_synth
    (douta,
     addra,
