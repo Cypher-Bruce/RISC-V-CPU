@@ -1,4 +1,4 @@
-# SITUATION 2: test 101, little-endian and big-endian
+# SITUATION 2: test 101, little-endian and big-endian, 12-bit version
 .data
     switch:         .word 0x11fc0
     button:         .word 0x11fc4
@@ -42,7 +42,7 @@ or   a5, a5, a2     # a5: 16-bit data, big-endian
 j   display_101
 
 display_101:
-li a3, 0x00000FFF
-and a5, a5, a3
+li a3, 0x00000FFF   
+and a5, a5, a3	    # truncate to 12-bit to display
 sw   a5, 0(t1)      # output to led
 sw   a5, 0(t2)      # output to seven_seg_tube
