@@ -75,6 +75,22 @@ lhu a0, 0(t0)
 li a1, 0x8000
 and s0, a0, a1
 srli s0, s0, 15
+
+bne s0, zero, floor
+j ceil
+
+testcase2:
+
+lhu a0, 0(t0)
+li a1, 0x8000
+and s0, a0, a1
+srli s0, s0, 15
+
+bne s0, zero, ceil
+j floor
+
+ceil:
+
 li a1, 0x7C00
 and s1, a0, a1
 srli s1, s1, 10
@@ -184,12 +200,8 @@ sw a1, 0(t5)
 
 j exit
 
-testcase2:
+floor:
 
-lhu a0, 0(t0)
-li a1, 0x8000
-and s0, a0, a1
-srli s0, s0, 15
 li a1, 0x7C00
 and s1, a0, a1
 srli s1, s1, 10
