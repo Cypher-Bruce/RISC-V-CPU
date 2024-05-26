@@ -516,8 +516,8 @@ loop_111:
 
 mv  a0, s2
 jal ra, fibonacci 
-bge a1, s0, break_111
-addi s2, s2, 1
+bge a1, s0, break_111 # loop until a1 is larger than input number
+addi s2, s2, 1 # counter
 j loop_111
 
 fibonacci: # calculate f(n) where n = a0, put f(n) into a1, will use a2 as temp
@@ -527,7 +527,7 @@ sw   ra, 0(sp)
 sw   a0, 4(sp)
 sw   a2, 8(sp)
 
-jal ra, display_111_stack_in
+jal ra, display_111_stack_in # output stack_in data
 
 li a2, 0
 beq a0, a2, base_case_0
@@ -554,7 +554,7 @@ end_fibonacci:
 
 lw a0, 4(sp)
 
-jal ra, display_111_stack_out
+jal ra, display_111_stack_out # output stack_out data
 
 lw ra, 0(sp)
 lw a2, 8(sp)
@@ -581,7 +581,7 @@ sw   ra, 0(sp)
 sw a0, 0(t1)
 sw a0, 0(t2)
 
-jal ra, sleep
+jal ra, sleep # every output along with a sleep of period 1 second
 
 lw ra, 0(sp)
 addi sp, sp, 4
@@ -590,12 +590,13 @@ jr ra
 sleep:
 
 li a6, 0
-li a7, 0x00AF79E0
+li a7, 0x00AF79E0 # half of 23MHz = 23,000,000 Hz
 
 sleep_loop:
 addi a6, a6, 1
-bne a6, a7, sleep_loop
-
+bne a6, a7, sleep_loop # here can show that we utilized BRANCH PREDICTION:
+		       # because if we don't utilize it, the sleep period will double, which is 2 seconds,
+			# and can be easily observed.
 jr ra
 
 
@@ -604,6 +605,7 @@ break_111:
 sw s2, 0(t1)
 sw s2, 0(t2)
 jal ra, sleep
+
 
 j exit
 
