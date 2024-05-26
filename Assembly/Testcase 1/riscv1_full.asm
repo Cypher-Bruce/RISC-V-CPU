@@ -115,7 +115,7 @@ andi a4, a4, 1
 sw a3, (t1)
 beq a4, zero, exit
 
-lb a4, 0(t0)
+lbu a4, 0(t0)
 mv a7, a4
 
 j exit
