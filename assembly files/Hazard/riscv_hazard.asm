@@ -32,3 +32,5 @@ add a1, a1, a1 # Two Reg-Reg hazards --> ALU-ALU Forwarding
 sw a1, 0(t1)
 sw a1, 0(t2)
 
+# If all hazards are properly dealt with, the result will be 8 times of the input
+# Otherwise (any hazard) the result will be wrong.
