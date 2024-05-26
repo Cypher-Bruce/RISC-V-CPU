@@ -1,5 +1,11 @@
 `timescale 1ns / 1ps
 
+/// Module: Branch_Target
+/// Description: This module is responsible for determining the target address of a branch instruction.
+///              The target address is calculated based on the instruction type and the branch condition.
+///              The module also determines whether the branch prediction is correct.
+/// Note:   - https://photos.app.goo.gl/DPXyZYnmx9nme9xh9
+
 module Branch_Target(
     input             jal_flag,
     input             jalr_flag,

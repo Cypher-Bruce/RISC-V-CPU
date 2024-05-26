@@ -1,22 +1,27 @@
 `timescale 1ns / 1ps
 
-module Forwarding_Unit(
-    input [31:0] ALU_result_MEM,
-    input [4:0] write_reg_idx_MEM,
-    input write_reg_flag_MEM,
-    input mem_to_reg_flag_MEM,
-    input [31:0] ALU_result_WB,
-    input [31:0] read_data_WB,
-    input [4:0] write_reg_idx_WB,
-    input write_reg_flag_WB,
-    input mem_to_reg_flag_WB,
-    input [4:0] read_reg_idx_1_EX,
-    input [4:0] read_reg_idx_2_EX,
+/// Module: Forwarding_Unit
+/// Description: This module is used to forward the data from the MEM and WB stages to the EX stage.
+///             The forwarding unit is responsible for detecting data hazards and forwarding the data
+///             to the EX stage to avoid stalls.
 
-    output reg [31:0] read_data_1_forwarding,
-    output reg [31:0] read_data_2_forwarding,
-    output read_data_1_forwarding_flag,
-    output read_data_2_forwarding_flag
+module Forwarding_Unit(
+    input       [31:0] ALU_result_MEM,
+    input       [4 :0] write_reg_idx_MEM,
+    input              write_reg_flag_MEM,
+    input              mem_to_reg_flag_MEM,
+    input       [31:0] ALU_result_WB,
+    input       [31:0] read_data_WB,
+    input       [4 :0] write_reg_idx_WB,
+    input              write_reg_flag_WB,
+    input              mem_to_reg_flag_WB,
+    input       [4 :0] read_reg_idx_1_EX,
+    input       [4 :0] read_reg_idx_2_EX,
+
+    output reg  [31:0] read_data_1_forwarding,
+    output reg  [31:0] read_data_2_forwarding,
+    output             read_data_1_forwarding_flag,
+    output             read_data_2_forwarding_flag
 );
 
 wire MEM_hazard_1_flag;

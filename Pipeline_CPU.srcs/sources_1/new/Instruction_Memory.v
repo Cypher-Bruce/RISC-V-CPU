@@ -13,11 +13,13 @@ module Instruction_Memory(
     input  [31:0] upg_dat            // UPG write data
 );
 
-// Instruction_Memory_ip Instruction_Memory_ip_Instance(
-//     .clka(clk), 
-//     .addra(program_counter[15:2]), 
-//     .douta(inst)
-// );
+////////////////////////// ADDRESS SHIFTING //////////////////////////
+/// !Note: in pipeline version CPU, the memory ip core is detached from instrctoin fectch, this module only deals with PC.
+/// We use memory layout like this: https://photos.app.goo.gl/8xTAXyCikpdyna5V9
+/// Because it's not possible to access various memory IP cores using absolute addresses in the address space,
+/// it's necessary to perform address offsetting when accessing IP core addresses: absolute address - offset within the address section.
+/// Therefore, when accessing instruction memory, no address adjustment is required,
+/// whereas when accessing data memory, the absolute address needs to be subtracted by 0x2000.
 
 ////////////////////////// Instruction Memory //////////////////////////
 /// The inst memory is so far a ROM ip core
@@ -26,11 +28,9 @@ module Instruction_Memory(
 ///         - clka: cpu clock signal, 23MHz
 ///         - addra: Word addressable. 14-bit from PC, = PC >> 2
 ///         - douta: 32-bit instruction
-/// TODO: update inst memory to RAM for UART
 /// Note: 
 ///         - Data is read at the FALLING edge of the clock signal
 ///         - To implement UART, instruction memory is changed to RAM ip core
-
 
 Instruction_Memory_ip Instruction_Memory_Instance(
     .clka  (kick_off_flag ? clk                   : uart_clk),

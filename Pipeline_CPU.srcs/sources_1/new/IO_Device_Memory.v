@@ -30,6 +30,7 @@ module IO_Device_Memory(
 
 wire [31:0] address;
 wire [31:0] truncate_address;
+
 assign address = address_absolute - `data_memory_initial_address;
 assign truncate_address = {address[31:2], 2'b00};
 

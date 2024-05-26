@@ -1,16 +1,23 @@
 `timescale 1ns / 1ps
 
+/// Module: Top
+/// Description: Top module of the CPU, which connects all the submodules together.
+///             It includes the CPU, UART, Debouncer, Seven_Seg_Tube_Driver and CPU_Main_Clock_ip.
+///             It also connects the input and output ports of the CPU to the outside world.
+/// Input: raw_clk, raw_rst, switch, button, rx
+/// Output: led, tube_select_onehot, tube_shape, tx
+
 module Top(
-    input             raw_clk,
-    input             raw_rst,
-    input  [23:0]     switch,
-    input  [4:0]      button,
-    output [23:0]     led,
-    output [7:0]      tube_select_onehot,
-    output [7:0]      tube_shape,
+    input             raw_clk,            // 100MHz clock signal, to be divided into 23MHz and 10MHz
+    input             raw_rst,            // reset signal, need to be adjusted by UART, see line73 & UART.v
+    input  [23:0]     switch,             // 24-bit switch input
+    input  [4:0]      button,             // 5-bit button input, UART communicatoin mode is P2
+    output [23:0]     led,                // 24-bit led output
+    output [7:0]      tube_select_onehot, // 8-bit tube select signal
+    output [7:0]      tube_shape,         // 8-bit tube shape signal
     
-    input             rx,
-    output            tx
+    input             rx,                 // UART receive input
+    output            tx                  // UART transmit output
 );
 
 wire [31:0] seven_seg_tube;
@@ -31,7 +38,7 @@ CPU_Main_Clock_ip CPU_Main_Clock_ip_Instance(
 
 ////////// Button Debouncer //////////
 
-wire rst;
+wire       rst;
 wire [4:0] debounced_button;
 wire [4:0] push_button_flag;
 wire [4:0] release_button_flag;

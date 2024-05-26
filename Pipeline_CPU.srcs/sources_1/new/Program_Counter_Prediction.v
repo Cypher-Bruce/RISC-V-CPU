@@ -15,6 +15,7 @@
 ///     program counter value plus the instruction width. This is a conservative
 ///     assumption that assumes the program will execute the next instruction
 ///     sequentially.
+///   In short, use LRU cache to store the branch instruction and its target address.
 
 module Program_Counter_Prediction(
     input             clk,

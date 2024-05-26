@@ -7,6 +7,7 @@
 ///     - read instrction is simultaneous, write instruction executes on the FALLING edge of the clock
 ///     - register 0 is always 0
 ///     - input write_reg_idx and write_data are passed from EX/MEM pipeline register
+///     - stack pointer and global pointer are initialized to 0x2000 and 0x8000 respectively when reset
 
 module Register(
     input                 clk,
@@ -20,8 +21,6 @@ module Register(
     output         [31:0] read_data_1,
     output         [31:0] read_data_2
 );
-
-
     reg [31:0] register [0:31];
 
     assign read_data_1 = register[read_reg_idx_1];

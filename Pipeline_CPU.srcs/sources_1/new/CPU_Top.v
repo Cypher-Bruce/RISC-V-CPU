@@ -1,52 +1,30 @@
 `timescale 1ns / 1ps
 
 /// Module: CPU_Top
-/// #Description: This module is the top module of the CPU. 
-///              It connects all the other modules together.
-/// #Inputs: raw_clk, rst, switch
-/// #Outputs: led
-/// #Signals
-///             clk: adjusted clock signal, 
-///             inst: 32-bit instruction from inst. memory
-
-///             branch_flag: flag indicates branch inst
-///             ALU_Operation: 2-bit ALU operation code
-///             ALU_src_flag: 0: read data from register, 1: read data from immediate
-///             mem_read_flag: flag indicates memory read
-///             mem_write_flag: flag indicates memory write
-///             mem_to_reg_flag: flag indicates memory to register
-///             reg_write_flag: flag indicates register write
-///             zero_flag: flag indicates zero result
-
-///             imme: 32-bit immediate value extracted from instruction
-///             reg_data_1: 32-bit data from register file
-///             reg_data_2: 32-bit data from register file
-///             write_data: 32-bit data to be written to register file
-
-///             ALU_result: 32-bit result from ALU
-///             data_memory_data: 32-bit data from data memory
-
-
-/// TODO: add uart to pipeline CPU
+/// Description: Top module of the pipeline CPU, which connects all the submodules together.
+///              Main component: id, if, ex, mem, wb, controller; pipeline specific: forwarding, hazard detection, branch prediction pipeline registers
+/// Input: clk, rst, switch, debounced_button, push_button_flag, release_button_flag, kick_off_flag, uart_clk, upg_wen, upg_adr, upg_dat
+/// Output: led, seven_seg_tube, minus_sign_flag, dot_flag, show_none_flag, advanced_mode_flag, adv_seven_seg_tube_left, adv_seven_seg_tube_right
+/// Architecture: https://photos.app.goo.gl/GCJwwi5zq5vgg1tSA
 
 module CPU_Top(
-    input         clk,
+    input         clk,        // 23MHz
     input         rst,        // effect of rst: clear all the registers, set PC to 0, active high
-    input  [23:0] switch,
+    input  [23:0] switch,     
     input  [4:0]  debounced_button,
     input  [4:0]  push_button_flag,
     input  [4:0]  release_button_flag,
     output [23:0] led,
-    output [31:0] seven_seg_tube,   // segment
-    output [7:0]  minus_sign_flag,  // segment 
-    output [7:0]  dot_flag,         // segment
-    output [7:0]  show_none_flag,   // segment
-    output        advanced_mode_flag, // segment
-    output [31:0] adv_seven_seg_tube_left,  // segment
-    output [31:0] adv_seven_seg_tube_right, // segment
+    output [31:0] seven_seg_tube,               // segment
+    output [7:0]  minus_sign_flag,              // segment 
+    output [7:0]  dot_flag,                     // segment
+    output [7:0]  show_none_flag,               // segment
+    output        advanced_mode_flag,           // segment
+    output [31:0] adv_seven_seg_tube_left,      // segment
+    output [31:0] adv_seven_seg_tube_right,     // segment
 
-    input kick_off_flag,
-    input uart_clk,           // UPG ram_clk_i(10MHz)
+    input kick_off_flag,     // 1 -> working mode, 0 -> communication mode
+    input uart_clk,          // UPG ram_clk_i(10MHz)
     input upg_wen,           // UPG write enable
     input [14:0] upg_adr,    // UPG write address
     input [31:0] upg_dat     // UPG write data
@@ -191,7 +169,7 @@ Decoder Decoder_Instance(
 ///// Register /////
 
 wire        reg_write_flag_WB;
-wire [4:0]  write_reg_idx_WB;
+wire [4 :0] write_reg_idx_WB;
 wire [31:0] write_back_data;
 wire [31:0] read_data_1_ID;
 wire [31:0] read_data_2_ID;
@@ -328,7 +306,6 @@ ALU ALU_Instance(
 
 wire  [31:0]          ALU_result_MEM;
 wire                  zero_flag_MEM;
-// wire                  branch_flag_MEM;
 wire                  mem_read_flag_MEM;
 wire                  mem_write_flag_MEM;
 wire                  mem_to_reg_flag_MEM;
@@ -338,10 +315,11 @@ wire                  jalr_flag_MEM;
 wire  [31:0]          imme_MEM;
 wire  [31:0]          read_data_1_MEM;
 wire  [31:0]          read_data_2_MEM;
-wire  [4:0]           write_reg_idx_MEM;
+wire  [4 :0]          write_reg_idx_MEM;
 wire  [31:0]          inst_MEM;
-// wire  [31:0]         program_counter_MEM;
 wire  [31:0]          program_counter_prediction_MEM;   
+// wire                  branch_flag_MEM;
+// wire  [31:0]         program_counter_MEM;
 
 EX_MEM EX_MEM_Instance(
     .clk(clk),
@@ -469,14 +447,14 @@ IO_Device_Memory IO_Device_Memory_Instance(
 wire [31:0] read_data_WB;
 wire [31:0] ALU_result_WB;
 wire        mem_to_reg_flag_WB;
-// wire   reg_write_flag_WB;   // defined at register stage
 wire        jal_flag_WB;
 wire        jalr_flag_WB;
 wire        lui_flag_WB;
 wire        auipc_flag_WB;
 wire [31:0] imme_WB;
-// wire   [4:0] write_reg_idx_WB;   // defined at register stage
 wire [31:0] program_counter_WB;
+// wire   [4:0] write_reg_idx_WB;   // defined at register stage
+// wire   reg_write_flag_WB;        // defined at register stage
 
 MEM_WB MEM_WB_Instance(
     .clk(clk),

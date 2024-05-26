@@ -35,7 +35,6 @@ assign data_memory_write_flag = mem_write_flag & ~data_source_select_flag;
 assign io_device_read_flag = mem_read_flag & data_source_select_flag;
 assign io_device_write_flag = mem_write_flag & data_source_select_flag;
 
-
 // extract and sign-extend the data read from memory
 wire [31:0] raw_read_data;
 wire [2:0] funct3;

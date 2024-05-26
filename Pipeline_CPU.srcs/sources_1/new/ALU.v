@@ -3,8 +3,8 @@
 /// Module: ALU
 /// Description: This module is the Arithmetic Logic Unit (ALU) of the RISC-V processor,
 ///              it supports the following operations: AND, SUB, OR, ADD so far. (5/13)
-/// Inputs: ReadData1, ReadData2, imm32, ALUOp, ALUSrc, funct3, funct7(details seen below in the code)
-/// Outputs: ALUResult, zero
+/// Input: read_data_1, read_data_2, imme, ALU_operation, ALU_src_flag, inst, program_counter, jal_flag, jalr_flag, lui_flag, auipc_flag
+/// Output: ALU_result, zero_flag
 
 module ALU (
     input      [31:0] read_data_1,      // data from register file
@@ -23,17 +23,17 @@ module ALU (
     output            zero_flag         // branch flag, to IF(PC), 1 if ALU_result == 0
 );
 
-reg  [3:0]  ALU_control;
-wire [31:0] operand_1;
-wire [31:0] operand_2;  // depends on ALU_src_flag: 0 => read_data_2, 1 => imme
-wire [2:0]  funct3;
-wire [6:0]  funct7;
-wire [6:0]  opcode;
+reg  [3 :0]  ALU_control;
+wire [31:0]  operand_1;
+wire [31:0]  operand_2;  // depends on ALU_src_flag: 0 => read_data_2, 1 => imme
+wire [2 :0]  funct3;
+wire [6 :0]  funct7;
+wire [6 :0]  opcode;
 
 assign zero_flag = (ALU_result == 0);
-assign funct7 = inst[31:25];
-assign funct3 = inst[14:12];
-assign opcode = inst[6:0];
+assign funct7    = inst[31:25];
+assign funct3    = inst[14:12];
+assign opcode    = inst[6:0];
 
 assign operand_1 = read_data_1;
 assign operand_2 = (ALU_src_flag) ? imme : read_data_2;
