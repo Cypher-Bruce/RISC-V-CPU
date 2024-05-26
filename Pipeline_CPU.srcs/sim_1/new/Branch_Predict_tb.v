@@ -26,11 +26,15 @@ module Branch_Predict_tb();
 
     initial begin
         raw_clk = 0;
-        raw_rst = 0;
+        raw_rst = 1;
         switch = 0;
         button = 0;
         rx = 0;
         forever #5 raw_clk = ~raw_clk;
+    end
+    
+    initial begin
+        #3000 raw_rst = 0;
     end
 
 endmodule
