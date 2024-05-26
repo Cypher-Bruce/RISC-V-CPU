@@ -2,14 +2,17 @@
 `include "Seven_Seg_Tube_Parameters.v"
 
 module Seven_Seg_Tube_Driver(
-    input             raw_clk,
-    input             rst,
-    input      [31:0] data,
-    input      [7:0]  minus_sign_flag,
-    input      [7:0]  dot_flag,
-    input      [7:0]  show_none_flag,
-    output     [7:0]  tube_select_onehot,
-    output reg [7:0]  tube_shape
+    input             raw_clk,                           // 100MHz clock
+    input             rst,                               // reset
+    input      [31:0] data,                              // 32-bit data
+    input      [7:0]  minus_sign_flag,                   // show minus sign
+    input      [7:0]  dot_flag,                          // show dot
+    input      [7:0]  show_none_flag,                    // show nothing
+    input             advanced_mode_flag,                // advanced mode: user can input any shape
+    input      [31:0] adv_seven_seg_tube_left,           // advanced shape for left tube
+    input      [31:0] adv_seven_seg_tube_right,          // advanced shape for right tube
+    output     [7:0]  tube_select_onehot,                // tube select onehot
+    output reg [7:0]  tube_shape                         // 7-segment tube shape
 );
 
 // raw_clk: 100MHz
@@ -36,9 +39,10 @@ module Seven_Seg_Tube_Driver(
         end
     end
 
-    reg [2:0] tube_select;
-    wire [6:0] pre_defined_shape [0:15];
-    wire [3:0] digits [0:7];
+    reg [2:0] tube_select;                          // 3-bit tube select, which tube to display
+    wire [6:0] pre_defined_shape [0:15];            // 7-segment shape for 0~9, A~F
+    wire [3:0] digits [0:7];                        // 4-bit digit for each tube
+    wire [6:0] adv_shape [0:7];                     // advanced shape for each tube
 
     always @(posedge clk or posedge rst) begin
         if (rst) begin
@@ -77,7 +81,23 @@ module Seven_Seg_Tube_Driver(
     assign digits[6] = data[27:24];
     assign digits[7] = data[31:28];
 
+    assign adv_shape[0] = adv_seven_seg_tube_right[6:0];
+    assign adv_shape[1] = adv_seven_seg_tube_right[14:8];
+    assign adv_shape[2] = adv_seven_seg_tube_right[22:16];
+    assign adv_shape[3] = adv_seven_seg_tube_right[30:24];
+    assign adv_shape[4] = adv_seven_seg_tube_left[6:0];
+    assign adv_shape[5] = adv_seven_seg_tube_left[14:8];
+    assign adv_shape[6] = adv_seven_seg_tube_left[22:16];
+    assign adv_shape[7] = adv_seven_seg_tube_left[30:24];
+
+    // be cautious about the priority
+    // all signals are active low
+
     always @* begin
+        if (advanced_mode_flag) begin
+            tube_shape = ~{dot_flag[tube_select], adv_shape[tube_select]};
+        end
+        else
         if (show_none_flag[tube_select]) begin
             tube_shape = ~`NULL_SHAPE;
         end

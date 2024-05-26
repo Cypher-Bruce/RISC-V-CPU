@@ -7,28 +7,28 @@
 /// Outputs: ALUResult, zero
 
 module ALU (
-    input      [31:0] read_data_1,  // data from register file
-    input      [31:0] read_data_2,  // data from register file
-    input      [31:0] imme,         // immediate value, addi or beq, from ID
-    input      [1:0]  ALU_operation,// ALU operation code, from controller
-    input             ALU_src_flag, // ALU source flag, from controller
-    input      [31:0] inst,         // 32-bit instruction, from ID
+    input      [31:0] read_data_1,      // data from register file
+    input      [31:0] read_data_2,      // data from register file
+    input      [31:0] imme,             // immediate value, addi or beq, from ID
+    input      [1:0]  ALU_operation,    // ALU operation code, from controller
+    input             ALU_src_flag,     // ALU source flag, from controller
+    input      [31:0] inst,             // 32-bit instruction, from ID
     input      [31:0] program_counter,
     input             jal_flag,
     input             jalr_flag,
     input             lui_flag,
     input             auipc_flag,
     
-    output reg [31:0] ALU_result,   // result, to register file or data memory
-    output            zero_flag     // branch flag, to IF(PC), 1 if difference btw two operands is 0
+    output reg [31:0] ALU_result,       // result, to register file or data memory
+    output            zero_flag         // branch flag, to IF(PC), 1 if ALU_result == 0
 );
 
-reg [3:0] ALU_control;
+reg  [3:0]  ALU_control;
 wire [31:0] operand_1;
 wire [31:0] operand_2;  // depends on ALU_src_flag: 0 => read_data_2, 1 => imme
-wire [2:0] funct3;
-wire [6:0] funct7;
-wire [6:0] opcode;
+wire [2:0]  funct3;
+wire [6:0]  funct7;
+wire [6:0]  opcode;
 
 assign zero_flag = (ALU_result == 0);
 assign funct7 = inst[31:25];
@@ -124,6 +124,7 @@ end
 // 1000: slt
 // 1001: sltu
 // Note: for signed and unsigned comparison, refer to https://circuitcove.com/design-examples-comparators/
+// Also, pay attention to the priority when treating jal, jalr, lui, and auipc instructions
 
 always @* begin
     if (jal_flag || jalr_flag) begin

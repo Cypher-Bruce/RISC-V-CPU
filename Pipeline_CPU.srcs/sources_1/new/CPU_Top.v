@@ -41,6 +41,9 @@ module CPU_Top(
     output [7:0]  minus_sign_flag,  // segment 
     output [7:0]  dot_flag,         // segment
     output [7:0]  show_none_flag,   // segment
+    output        advanced_mode_flag, // segment
+    output [31:0] adv_seven_seg_tube_left,  // segment
+    output [31:0] adv_seven_seg_tube_right, // segment
 
     input kick_off_flag,
     input uart_clk,           // UPG ram_clk_i(10MHz)
@@ -455,7 +458,10 @@ IO_Device_Memory IO_Device_Memory_Instance(
     .seven_seg_tube(seven_seg_tube),
     .minus_sign_flag(minus_sign_flag),
     .dot_flag(dot_flag),
-    .show_none_flag(show_none_flag)
+    .show_none_flag(show_none_flag),
+    .advanced_mode_flag(advanced_mode_flag),
+    .adv_seven_seg_tube_left(adv_seven_seg_tube_left),
+    .adv_seven_seg_tube_right(adv_seven_seg_tube_right)
 );
 
 ////////// MEM/WB //////////

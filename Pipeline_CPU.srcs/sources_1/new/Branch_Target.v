@@ -68,7 +68,6 @@ end
 
 //////////////// branch_pc //////////////////
 // branch_pc: the next program counter
-// will be ignored if branch_taken_flag = 0
 
 always @* begin
     if (jalr_flag) begin
