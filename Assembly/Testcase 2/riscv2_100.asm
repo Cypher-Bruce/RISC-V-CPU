@@ -26,13 +26,12 @@ andi a2, a2, 0x000000ff     # keep the lower 8-bit
 
 add  a3, a1, a2          # a3 = a1 + a2
 srli a4, a3, 8          # get the 9_th bit of sum of a1 and a2
-addi a4, a4, -1
 andi  a3, a3, 0x000000ff         # by the way, keep the lower 8-bit of a3
-bne  a4, zero, display_100
+beq  a4, zero, display_100      # if the 9_th bit of sum is 0 then output, otherwise proceed
 addi a3, a3, 1      # add 1 to a3
+xori a3, a3, -1      # take the reverse of a3
 
 display_100:
-xori a3, a3, -1
-andi  a3, a3, 0x000000ff  
+andi  a3, a3, 0x000000ff
 sw a3, (t1)
 sw a3, (t2)
