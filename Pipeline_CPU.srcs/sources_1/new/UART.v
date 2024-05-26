@@ -24,6 +24,7 @@ module UART(
 );
 
 wire upg_done; //Uart iFpgaUartFromPc data have done
+reg upg_rst = 1;
 
 assign rst = raw_rst | !upg_rst;  //used for other modules which don't relate to UART
 assign kick_off_flag = upg_rst | (~upg_rst & upg_done);  /* if kickOff is 1 means CPU work on normal mode, otherwise CPU work on Uart communication mode */
@@ -33,7 +34,6 @@ wire spg_bufg;
 BUFG U1(.I(start_pg), .O(spg_bufg)); 
 
 // Generate UART Programmer reset signal
-reg upg_rst = 1;
 always @ (posedge raw_clk) begin
     if (spg_bufg) 
         upg_rst <= 0;

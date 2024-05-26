@@ -20,46 +20,31 @@ lw t4, dot_flag
 lw t5, show_non_flag
 lw t6, push_flag
 
-sw zero, (t1)       # clear led
-sw zero, (t2)       # clear seven_seg_tube
-sw zero, (t3)       # clear minus_sign_flag
-li a3, 0x000000FF   
-sw a3, (t5)         # set show_non_flag to 0xFF
-
-testcase0:
-
 # read 8-bit number
-lb  a1, 0(t0)
-li  a3, 0x000000FF
-and a1, a1, a3
-mv  a4, a1
-
-# tube
-li a3, 0x000000FC
-sw a3, (t5)
-sw a4, (t2)
+lbu  a1, 0(t0)
 
 # power of 2
 li a3, 0x00000001
-beq a1, a3, show_led_110
+beq a1, a3, display_110
 li a3, 0x00000002
-beq a1, a3, show_led_110
+beq a1, a3, display_110
 li a3, 0x00000004
-beq a1, a3, show_led_110
+beq a1, a3, display_110
 li a3, 0x00000008
-beq a1, a3, show_led_110
+beq a1, a3, display_110
 li a3, 0x00000010
-beq a1, a3, show_led_110
+beq a1, a3, display_110
 li a3, 0x00000020
-beq a1, a3, show_led_110
+beq a1, a3, display_110
 li a3, 0x00000040
-beq a1, a3, show_led_110
+beq a1, a3, display_110
 li a3, 0x00000080
-beq a1, a3, show_led_110
+beq a1, a3, display_110
 j exit
 
-show_led_110:
-li a3, 0x00FFFFFF
+display_110:
+li a3, 0x000000FF
 sw a3, 0(t1)
+sw a3, 0(t2)
 
 exit:

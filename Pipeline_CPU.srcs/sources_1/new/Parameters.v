@@ -15,6 +15,9 @@
 `define minus_sign_flag_initial_address 16'hFFE8
 `define dot_flag_initial_address 16'hFFEC
 `define show_none_flag_initial_address 16'hFFF0
+`define advanced_mode_flag_initial_address 16'hFFF4
+`define adv_seven_seg_tube_left_initial_address 16'hFFF8
+`define adv_seven_seg_tube_right_initial_address 16'hFFFC
 
 // Address offset
 `define data_memory_initial_address 32'h00002000

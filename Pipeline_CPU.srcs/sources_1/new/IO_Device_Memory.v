@@ -22,7 +22,10 @@ module IO_Device_Memory(
     output reg [31:0]  seven_seg_tube,
     output reg [7:0]   minus_sign_flag,
     output reg [7:0]   dot_flag,
-    output reg [7:0]   show_none_flag
+    output reg [7:0]   show_none_flag,
+    output reg         advanced_mode_flag,
+    output reg [31:0]  adv_seven_seg_tube_left,
+    output reg [31:0]  adv_seven_seg_tube_right
 ); 
 
 wire [31:0] address;
@@ -37,6 +40,9 @@ always @(negedge clk) begin
         minus_sign_flag <= 8'h0;
         dot_flag <= 8'h0;
         show_none_flag <= 8'h0;
+        advanced_mode_flag <= 1'b0;
+        adv_seven_seg_tube_left <= 32'h0;
+        adv_seven_seg_tube_right <= 32'h0;
     end
     else if (write_flag) begin
         case (truncate_address)
@@ -47,6 +53,9 @@ always @(negedge clk) begin
                 minus_sign_flag <= minus_sign_flag;
                 dot_flag <= dot_flag;
                 show_none_flag <= show_none_flag;
+                advanced_mode_flag <= advanced_mode_flag;
+                adv_seven_seg_tube_left <= adv_seven_seg_tube_left;
+                adv_seven_seg_tube_right <= adv_seven_seg_tube_right;
             end
             `seven_seg_tube_initial_address:
             begin
@@ -55,6 +64,9 @@ always @(negedge clk) begin
                 minus_sign_flag <= minus_sign_flag;
                 dot_flag <= dot_flag;
                 show_none_flag <= show_none_flag;
+                advanced_mode_flag <= advanced_mode_flag;
+                adv_seven_seg_tube_left <= adv_seven_seg_tube_left;
+                adv_seven_seg_tube_right <= adv_seven_seg_tube_right;
             end
             `minus_sign_flag_initial_address:
             begin
@@ -63,6 +75,9 @@ always @(negedge clk) begin
                 minus_sign_flag <= write_data[7:0];
                 dot_flag <= dot_flag;
                 show_none_flag <= show_none_flag;
+                advanced_mode_flag <= advanced_mode_flag;
+                adv_seven_seg_tube_left <= adv_seven_seg_tube_left;
+                adv_seven_seg_tube_right <= adv_seven_seg_tube_right;
             end
             `dot_flag_initial_address:
             begin
@@ -71,6 +86,9 @@ always @(negedge clk) begin
                 minus_sign_flag <= minus_sign_flag;
                 dot_flag <= write_data[7:0];
                 show_none_flag <= show_none_flag;
+                advanced_mode_flag <= advanced_mode_flag;
+                adv_seven_seg_tube_left <= adv_seven_seg_tube_left;
+                adv_seven_seg_tube_right <= adv_seven_seg_tube_right;
             end
             `show_none_flag_initial_address:
             begin
@@ -79,6 +97,42 @@ always @(negedge clk) begin
                 minus_sign_flag <= minus_sign_flag;
                 dot_flag <= dot_flag;
                 show_none_flag <= write_data[7:0];
+                advanced_mode_flag <= advanced_mode_flag;
+                adv_seven_seg_tube_left <= adv_seven_seg_tube_left;
+                adv_seven_seg_tube_right <= adv_seven_seg_tube_right;
+            end
+            `advanced_mode_flag_initial_address:
+            begin
+                led <= led;
+                seven_seg_tube <= seven_seg_tube;
+                minus_sign_flag <= minus_sign_flag;
+                dot_flag <= dot_flag;
+                show_none_flag <= show_none_flag;
+                advanced_mode_flag <= write_data[0];
+                adv_seven_seg_tube_left <= adv_seven_seg_tube_left;
+                adv_seven_seg_tube_right <= adv_seven_seg_tube_right;
+            end
+            `adv_seven_seg_tube_left_initial_address:
+            begin
+                led <= led;
+                seven_seg_tube <= seven_seg_tube;
+                minus_sign_flag <= minus_sign_flag;
+                dot_flag <= dot_flag;
+                show_none_flag <= show_none_flag;
+                advanced_mode_flag <= advanced_mode_flag;
+                adv_seven_seg_tube_left <= write_data;
+                adv_seven_seg_tube_right <= adv_seven_seg_tube_right;
+            end
+            `adv_seven_seg_tube_right_initial_address:
+            begin
+                led <= led;
+                seven_seg_tube <= seven_seg_tube;
+                minus_sign_flag <= minus_sign_flag;
+                dot_flag <= dot_flag;
+                show_none_flag <= show_none_flag;
+                advanced_mode_flag <= advanced_mode_flag;
+                adv_seven_seg_tube_left <= adv_seven_seg_tube_left;
+                adv_seven_seg_tube_right <= write_data;
             end
             default:
             begin
@@ -87,6 +141,9 @@ always @(negedge clk) begin
                 minus_sign_flag <= minus_sign_flag;
                 dot_flag <= dot_flag;
                 show_none_flag <= show_none_flag;
+                advanced_mode_flag <= advanced_mode_flag;
+                adv_seven_seg_tube_left <= adv_seven_seg_tube_left;
+                adv_seven_seg_tube_right <= adv_seven_seg_tube_right;
             end
         endcase
     end
@@ -96,6 +153,9 @@ always @(negedge clk) begin
         minus_sign_flag <= minus_sign_flag;
         dot_flag <= dot_flag;
         show_none_flag <= show_none_flag;
+        advanced_mode_flag <= advanced_mode_flag;
+        adv_seven_seg_tube_left <= adv_seven_seg_tube_left;
+        adv_seven_seg_tube_right <= adv_seven_seg_tube_right;
     end
 end
 

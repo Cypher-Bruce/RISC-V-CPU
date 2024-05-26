@@ -8,6 +8,9 @@ module Seven_Seg_Tube_Driver(
     input      [7:0]  minus_sign_flag,
     input      [7:0]  dot_flag,
     input      [7:0]  show_none_flag,
+    input             advanced_mode_flag,
+    input      [31:0] adv_seven_seg_tube_left,
+    input      [31:0] adv_seven_seg_tube_right,
     output     [7:0]  tube_select_onehot,
     output reg [7:0]  tube_shape
 );
@@ -39,6 +42,7 @@ module Seven_Seg_Tube_Driver(
     reg [2:0] tube_select;
     wire [6:0] pre_defined_shape [0:15];
     wire [3:0] digits [0:7];
+    wire [6:0] adv_shape [0:7];
 
     always @(posedge clk or posedge rst) begin
         if (rst) begin
@@ -77,7 +81,20 @@ module Seven_Seg_Tube_Driver(
     assign digits[6] = data[27:24];
     assign digits[7] = data[31:28];
 
+    assign adv_shape[0] = adv_seven_seg_tube_right[6:0];
+    assign adv_shape[1] = adv_seven_seg_tube_right[14:8];
+    assign adv_shape[2] = adv_seven_seg_tube_right[22:16];
+    assign adv_shape[3] = adv_seven_seg_tube_right[30:24];
+    assign adv_shape[4] = adv_seven_seg_tube_left[6:0];
+    assign adv_shape[5] = adv_seven_seg_tube_left[14:8];
+    assign adv_shape[6] = adv_seven_seg_tube_left[22:16];
+    assign adv_shape[7] = adv_seven_seg_tube_left[30:24];
+
     always @* begin
+        if (advanced_mode_flag) begin
+            tube_shape = ~{dot_flag[tube_select], adv_shape[tube_select]};
+        end
+        else
         if (show_none_flag[tube_select]) begin
             tube_shape = ~`NULL_SHAPE;
         end

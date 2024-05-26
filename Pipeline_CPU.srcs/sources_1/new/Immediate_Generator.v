@@ -38,7 +38,7 @@ begin
     end
     7'b1101111: // J
     begin
-        imme = {{19{inst[31]}}, inst[31], inst[19:12], inst[20], inst[30:21], 1'b0};
+        imme = {{11{inst[31]}}, inst[31], inst[19:12], inst[20], inst[30:21], 1'b0};
     end
     default:
     begin
