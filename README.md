@@ -59,16 +59,16 @@ Please refer to the report for detailed information about the project structure.
 1. Write your program in RARS.
 2. Set Memory Configuration to `Compact, Text at Address 0` under `Settings/ Memory Configuration`.
 3. Assemble your program.
-4. Dump your instructions to `inst.txt` and data to `data.txt` using the `File/Dump Memory` function, set dump format to `Hexadecimal Text`.
+4. Dump your instructions to `inst.txt` and data to `dmem.txt` using the `File/Dump Memory` function, set dump format to `Hexadecimal Text`.
 
 ### Load your program by `.coe` file (Not Recommended)
-1. Copy and paste your `inst.txt` and `data.txt` to the same directory as `GenUBit_RISC_V.bat`, `rars2coe.exe` and `UARTCoe_v3.0.exe` (provided under `/Assembly`).
+1. Copy and paste your `inst.txt` and `dmem.txt` to the same directory as `GenUBit_RISC_V.bat`, `rars2coe.exe` and `UARTCoe_v3.0.exe` (provided under `/Assembly`).
 2. Run `GenUBit_RISC_V.bat` to generate `prgmip32.coe` and `dmem32.coe`.
 3. Set `prgmip32.coe` and `dmem32.coe` as the initial memory content in the `Instruction Memory` and `Data Memory` respectively.
 4. Run generate bitstream.
 
 ### Load your program by UART (Recommended)
-1. Copy and paste your `inst.txt` and `data.txt` to the same directory as `GenUBit_RISC_V.bat`, `rars2coe.exe` and `UARTCoe_v3.0.exe` (provided under `/Assembly`).
+1. Copy and paste your `inst.txt` and `dmem.txt` to the same directory as `GenUBit_RISC_V.bat`, `rars2coe.exe` and `UARTCoe_v3.0.exe` (provided under `/Assembly`).
 2. Run `GenUBit_RISC_V.bat` to generate `out.txt`.
 3. Run `UartAssist.exe` (provided under `/Assembly`), set the baud rate to 128000, and load `out.txt`.
 4. Run generate bitstream and program the FPGA.
