@@ -21,6 +21,7 @@ This repository contains the following contents:
 - **Branch Prediction**: The CPU is equipped with a simple branch prediction module to predict the program counter value.
 - **`lui` and `auipc` Instructions**: The CPU is capable of executing `lui` and `auipc` instructions.
 - **Bug-free**: During our testing, the CPU is bug-free for its hardware implementation. We are confident that any program that runs on the RARS simulator will run correctly on our CPU. If you find any bugs, please let us know.
+- **Well documented**: Each module is documented in detail, we hope this can help you understand the code, because this helped us a lot :)
 
 ## Project Structure
 Please refer to the report for detailed information about the project structure.
