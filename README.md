@@ -6,6 +6,13 @@ This is the final project for the course CS214 Computer Organization at SUSTech.
 
 This project runs on Minisys board, not EGO-1 board. Please make sure you have the correct board before running the project.
 
+## Repository Contents
+
+This repository contains the following contents:
+- Pipelined CPU source code
+- Assembly files and COE files for testing
+- Useful tools: RARS(a RISC-V assembly code simulator), UARTCoe_v3.0.exe(a UART transmit tool). The tools can be found under SUSTech-CS214-Computer-Organization-Project/Assembly
+
 ## Project Feature
 
 - **5-stage pipeline**: The CPU is implemented with a 5-stage pipeline, including Instruction Fetch (IF), Instruction Decode (ID), Execute (EX), Memory Access (MEM), and Write Back (WB).
