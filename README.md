@@ -57,7 +57,7 @@ Please refer to the report for detailed information about the project structure.
 
 ### Write and assemble your program
 1. Write your program in RARS.
-2. Set Memory Configuration to `Compact, Text at Address 0` under `Settings/ Memory Configuration`.
+2. Set Memory Configuration to `Compact, Text at Address 0` under `Settings/Memory Configuration`.
 3. Assemble your program.
 4. Dump your instructions to `inst.txt` and data to `dmem.txt` using the `File/Dump Memory` function, set dump format to `Hexadecimal Text`.
 
