@@ -71,3 +71,4 @@
 /Pipeline_CPU.sim
 /Pipeline_CPU.hw
 !Report/*
+!Assembly/*
