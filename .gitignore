@@ -61,11 +61,12 @@
 !*.elf
 !*.bmm
 !*.xmp
+
+
 # RISC-V Assembly Files
 !*.asm
 
 
-# End of https://www.toptal.com/developers/gitignore/api/xilinxvivado
 /project_1.cache
 /project_1.hw
 /project_1.ip_user_files
@@ -76,3 +77,4 @@
 /Pipeline_CPU.runs
 /Pipeline_CPU.sim
 /Pipeline_CPU.hw
+!Report/*
