@@ -72,3 +72,4 @@
 /Pipeline_CPU.hw
 !Report/*
 !Assembly/*
+!top.bit
