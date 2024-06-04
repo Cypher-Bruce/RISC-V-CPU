@@ -28,7 +28,7 @@ Please refer to the report for detailed information about the project structure.
 ### From Scratch
 1. Download the project to your local machine.
 2. Open `Pipeline_CPU.xpr` in Vivado.
-3. Import design files `Pipeline_CPU.srcs/sources_1` to the project (please make sure you have `uart_bmpg_0` IP core, which is a custom IP core provided by the instructor and does not exist in vivado by default).
+3. Import design files `Pipeline_CPU.srcs/sources_1` to the project (please make sure you have `uart_bmpg_0` IP core, which is a custom IP core provided by the instructor and does not exist in Vivado by default).
 4. Import constraints file `Pipeline_CPU.srcs/constrs_1/new/Constraint.xdc` to the project.
 5. Run generate bitstream.
    
@@ -49,7 +49,7 @@ Please refer to the report for detailed information about the project structure.
 ### Load your program by UART (Recommended)
 1. Copy and paste your `inst.txt` and `data.txt` to the same directory as `GenUBit_RISC_V.bat`, `rars2coe.exe` and `UARTCoe_v3.0.exe` (provided under `/Assembly`).
 2. Run `GenUBit_RISC_V.bat` to generate `out.txt`.
-3. Run `UartAssist.exe`, set the baud rate to 128000, and load `out.txt`.
+3. Run `UartAssist.exe` (provided under `/Assembly`), set the baud rate to 128000, and load `out.txt`.
 4. Run generate bitstream and program the FPGA.
 5. Press P2 on the FPGA board to enter the UART communication mode.
 6. Send the program to the FPGA by clicking `Send` in `UartAssist.exe`.
