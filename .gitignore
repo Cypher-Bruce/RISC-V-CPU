@@ -66,14 +66,7 @@
 # RISC-V Assembly Files
 !*.asm
 
-
-/project_1.cache
-/project_1.hw
-/project_1.ip_user_files
-/project_1.runs
-/project_1.sim
 /Pipeline_CPU.cache
-/Pipeline_CPU.ip_user_files
 /Pipeline_CPU.runs
 /Pipeline_CPU.sim
 /Pipeline_CPU.hw
