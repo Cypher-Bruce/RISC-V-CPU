@@ -8,13 +8,13 @@ This project runs on Minisys board, not EGO-1 board. Please make sure you have t
 
 ## Project Feature
 
-- **5-stage pipeline**: The CPU is implemented with a 5-stage pipeline, including Instruction Fetch (IF), Instruction Decode (ID), Execute (EX), Memory Access (MEM), and Write Back (WB).
+- **5-stage Pipeline**: The CPU is implemented with a 5-stage pipeline, including Instruction Fetch (IF), Instruction Decode (ID), Execute (EX), Memory Access (MEM), and Write Back (WB).
   - **Forwarding Unit**: The CPU is equipped with a forwarding unit to handle data hazards.
   - **Hazard Detection Unit**: The CPU is equipped with a hazard detection unit to handle load-use hazards.
 - **Branch Prediction**: The CPU is equipped with a simple branch prediction module to predict the program counter value.
 - **`lui` and `auipc` Instructions**: The CPU is capable of executing `lui` and `auipc` instructions.
 - **Bug-free**: During our testing, the CPU is bug-free for its hardware implementation. We are confident that any program that runs on the RARS simulator will run correctly on our CPU. If you find any bugs, please let us know.
-- **Well documented**: Each module is documented in detail, we hope this can help you understand the code, because this helped us a lot :)
+- **Well Documented**: Each module is documented in detail, we hope this can help you understand the code
 
 ## Repository Structure
 
