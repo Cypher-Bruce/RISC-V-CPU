@@ -4,8 +4,6 @@
 
 This is the final project for the course CS214 Computer Organization at SUSTech. The project is to implement a simple 5-stage pipelined CPU in Verilog. The CPU is based on the RISC-V instruction set architecture (ISA). The CPU is capable of executing the RV32I base integer instruction set except `sb`, `sh`, `ecall` and `ebreak` instructions.
 
-This project runs on Minisys board, not EGO-1 board. Please make sure you have the correct board before running the project.
-
 ## Project Feature
 
 - **5-stage Pipeline**: The CPU is implemented with a 5-stage pipeline, including Instruction Fetch (IF), Instruction Decode (ID), Execute (EX), Memory Access (MEM), and Write Back (WB).
@@ -42,9 +40,12 @@ Please refer to the report for detailed information about the project structure.
 ## How to Run
 
 ### From Pre-built Bitstream
+
 1. Download the project to your local machine.
 2. Open Vivado and connect your FPGA board to your computer.
 3. Program the FPGA with the pre-built bitstream `Top.bit`.
+
+Note: The `Top.bit` file is built for Minisys board, not EGO-1 board. Please make sure you have the correct board before using it.
 
 ### From Scratch
 1. Download the project to your local machine.
