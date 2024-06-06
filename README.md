@@ -72,7 +72,7 @@ Note: The `Top.bit` file is built for Minisys board, not EGO-1 board. Please mak
 1. Copy and paste your `inst.txt` and `dmem.txt` to the same directory as `GenUBit_RISC_V.bat`, `rars2coe.exe` and `UARTCoe_v3.0.exe` (provided under `/Assembly`).
 2. Run `GenUBit_RISC_V.bat` to generate `out.txt`.
 3. Run `UartAssist.exe` (provided under `/Assembly`), set the baud rate to 128000, and load `out.txt`.
-4. Run generate bitstream and program the FPGA.
+4. Program the FPGA.
 5. Press P2 on the FPGA board to enter the UART communication mode.
 6. Send the program to the FPGA by clicking `Send` in `UartAssist.exe`.
 7. Wait until `Program Done` is displayed in `UartAssist.exe`.
