@@ -1,10 +1,10 @@
 # SUSTech-CS214-Computer-Organization-Project
 
-## Introduction
+## Introduction :sunny:
 
 This is the final project for the course CS214 Computer Organization at SUSTech. The project is to implement a simple 5-stage pipelined CPU in Verilog. The CPU is based on the RISC-V instruction set architecture (ISA). The CPU is capable of executing the RV32I base integer instruction set except `sb`, `sh`, `ecall` and `ebreak` instructions.
 
-## Project Feature
+## Project Feature :star:
 
 - **5-stage Pipeline**: The CPU is implemented with a 5-stage pipeline, including Instruction Fetch (IF), Instruction Decode (ID), Execute (EX), Memory Access (MEM), and Write Back (WB).
   - **Forwarding Unit**: The CPU is equipped with a forwarding unit to handle data hazards.
@@ -14,7 +14,7 @@ This is the final project for the course CS214 Computer Organization at SUSTech.
 - **Bug-free**: During our testing, the CPU is bug-free for its hardware implementation. We are confident that any program that runs on the RARS simulator will run correctly on our CPU. If you find any bugs, please let us know.
 - **Well Documented**: Each module is documented in detail, we hope this can help you understand the code
 
-## Repository Structure
+## Repository Structure :open_file_folder:
 
 - **`/Assembly`**: Assembly code and tools.
   - **`/Assembly/Out`**: `.txt` files that can be used to directly load the program to the FPGA.
@@ -37,7 +37,7 @@ This is the final project for the course CS214 Computer Organization at SUSTech.
 ## Project Structure
 Please refer to the report for detailed information about the project structure.
 
-## How to Run
+## How to Build Project :wrench:
 
 ### From Pre-built Bitstream
 
@@ -54,7 +54,7 @@ Note: The `Top.bit` file is built for Minisys board, not EGO-1 board. Please mak
 4. Import constraints file `Pipeline_CPU.srcs/constrs_1/new/Constraint.xdc` to the project.
 5. Run generate bitstream.
    
-## How to Load Program
+## How to Load Program :computer:
 
 ### Write and assemble your program
 1. Write your program in RARS.
