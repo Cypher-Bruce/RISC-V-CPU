@@ -4,11 +4,11 @@
  
  Contributors: [吴梦轩 12212006](https://github.com/Cypher-Bruce), [王韬杰 12210519](https://github.com/dequeueing), [吴思锐 12210122](https://github.com/Scott-Einstein)
 
-## Introduction 🚀
+## Introduction :rocket:
 
 This is the final project for the course CS214 Computer Organization at SUSTech. The project is to implement a simple 5-stage pipelined CPU in Verilog. The CPU is based on the RISC-V instruction set architecture (ISA). The CPU is capable of executing the RV32I base integer instruction set except `sb`, `sh`, `ecall` and `ebreak` instructions.
 
-## Project Feature 🌟
+## Project Feature :star2:
 
 - **5-stage Pipeline**: The CPU is implemented with a 5-stage pipeline, including Instruction Fetch (IF), Instruction Decode (ID), Execute (EX), Memory Access (MEM), and Write Back (WB).
   - **Forwarding Unit**: The CPU is equipped with a forwarding unit to handle data hazards.
